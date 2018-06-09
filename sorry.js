@@ -140,7 +140,7 @@
             if (ss.otherReport) {
                 for (var i in ss.otherReport) {
                     if (ss.otherReport.hasOwnProperty(i)) {
-                        src += '&' + i + '=' ss.otherReport[i]
+                        src += '&' + i + '=' + ss.otherReport[i]
                     }
                 }
             }
