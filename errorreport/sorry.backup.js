@@ -11,7 +11,7 @@
     var sorry = {}
     sorry.settings = {
         vconsoleUrl: '',
-        reportUrl: null,
+        reportUrl: 'http://193.112.22.19:8080/',
         reportPrefix: '',
         reportKey: 'msg',
         otherReport: null,
