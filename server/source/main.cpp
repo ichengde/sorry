@@ -10,12 +10,21 @@ int main() {
 
     listener.support(web::http::methods::GET, [](web::http::http_request message) {
         auto relativePath = web::uri::decode(message.relative_uri().path());
+        auto query = web::uri::decode(message.relative_uri().query());
+        auto params = web::uri::split_query(query);
         auto path = web::uri::split_path(relativePath);
         if (!path.empty()) {
             int i = 0;
             auto resp = web::json::value::array();
-            for (auto it :path) {
+            for (auto it:path) {
                 resp[i] = web::json::value::string(it);
+                i++;
+            }
+
+            for (auto p:params) {
+                resp[i] = web::json::value::string(p.first);
+                i++;
+                resp[i] = web::json::value::string(p.second);
                 i++;
             }
 
