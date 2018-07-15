@@ -37,7 +37,10 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++17 -DBOOST_LOG_DYN_LINK")
 endif ()
 
-add_executable(server ./source/main.cpp)
+add_executable(server ./source/main.cpp
+        ./source/router.cpp
+        ./source/service.cpp
+        )
 
 # headers search paths ...
 set(CPPRESTSDK_INCLUDE_DIR "/usr/include")
