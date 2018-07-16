@@ -2,13 +2,12 @@
 // Created by liuchengde on 2018/7/15.
 //
 #include "service.hpp"
+#include "util.hpp"
 
 std::function<void(web::http::http_request)> service::handle = [](web::http::http_request message) {
-    auto relativePath = web::uri::decode(message.relative_uri().path());
-    auto query = web::uri::decode(message.relative_uri().query());
-    auto params = web::uri::split_query(query);
-    auto path = web::uri::split_path(relativePath);
-
+    util utility;
+    auto params = utility.getParams(message);
+    auto path = utility.getPath(message);
 
     if (!path.empty()) {
         int i = 0;
@@ -25,15 +24,15 @@ std::function<void(web::http::http_request)> service::handle = [](web::http::htt
             i++;
         }
 
-        message.reply(web::http::status_codes::OK, resp);
     }
+    message.reply(web::http::status_codes::OK);
+
 };
 
-std::function<void(web::http::http_request)> service::stacktrace = [](web::http::http_request message) {
-    auto relativePath = web::uri::decode(message.relative_uri().path());
-    auto query = web::uri::decode(message.relative_uri().query());
-    auto params = web::uri::split_query(query);
-    auto path = web::uri::split_path(relativePath);
+std::function<void(web::http::http_request)> service::stackTrace = [](web::http::http_request message) {
+    util utility;
+    auto params = utility.getParams(message);
+    auto path = utility.getPath(message);
 
     auto content = web::json::value::object();
     content["version"] = web::json::value::string("0.0.1");
@@ -62,4 +61,13 @@ std::function<void(web::http::http_request)> service::stacktrace = [](web::http:
 
     message.reply(response);
 
+};
+
+std::function<void(web::http::http_request)> service::optionHandle = [](web::http::http_request message) {
+    auto response = web::http::http_response(web::http::status_codes::OK);
+
+    response.headers().add("Access-Control-Allow-Origin", "*");
+    response.headers().add("Access-Control-Allow-Headers", "*");
+
+    message.reply(response);
 };

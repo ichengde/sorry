@@ -40,6 +40,7 @@ endif ()
 add_executable(server ./source/main.cpp
         ./source/router.cpp
         ./source/service.cpp
+        ./source/util.cpp
         )
 
 # headers search paths ...

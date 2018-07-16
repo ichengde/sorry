@@ -11,7 +11,8 @@
 class service {
 public:
     static std::function<void(web::http::http_request)> handle;
-    static std::function<void(web::http::http_request)> stacktrace;
+    static std::function<void(web::http::http_request)> stackTrace;
+    static std::function<void(web::http::http_request)> optionHandle;
 };
 
 #endif //SERVER_SERVICE_H
