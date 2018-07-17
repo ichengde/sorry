@@ -5,12 +5,11 @@
 #include "router.hpp"
 
 int main() {
-    router r;
 
     web::http::experimental::listener::http_listener listener{r.getEndPoint()};
 
+    router r{listener};
     try {
-        r.run(listener);
         std::cout << "sorry server start" << std::endl;
         listener.open().wait();
 
