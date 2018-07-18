@@ -4,13 +4,14 @@ project(server)
 # Configure compiler options ...
 set(CMAKE_CXX_STANDARD 17)
 
+
+# headers search paths ...
+set(CPPRESTSDK_INCLUDE_DIR "/usr/include")
+
 # Configure required libraries ...
 if (UNIX) # Darwing or Linux
     find_package(Boost REQUIRED COMPONENTS system thread log program_options chrono)
     find_package(Threads REQUIRED)
-	
-		# headers search paths ...
-		set(CPPRESTSDK_INCLUDE_DIR "/usr/include")
     if (APPLE)
         # Prefer a homebrew version of OpenSSL over the one in /usr/lib
         file(GLOB OPENSSL_ROOT_DIR /usr/local/Cellar/openssl/*)
@@ -23,18 +24,18 @@ if (UNIX) # Darwing or Linux
         find_package(OpenSSL 1.0.1 REQUIRED)
         set(OPENSSL_VERSION "1.0.1")
     endif ()
-	
-elseif (WIN32) # Windows systems including Win64.
-    set(Boost_INCLUDE_DIR "../boost_1_67_0/")
-	set(CPPRESTSDK_INCLUDE_DIR "../cpprestsdk/")
-    #find_package(Threads REQUIRED)
-
-	# message(FATAL_ERROR "-- Windows is not supported for now.")
-else ()
-    message(FATAL_ERROR "-- Unsupported platform sorry! :( ")
 endif ()
 
-set(HEADER_SEARCH_PATHS ${CPPRESTSDK_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${OPENSSL_INCLUDE_DIR}
+if (WIN32) # Windows systems including Win64.
+    set(Boost_INCLUDE_DIR "../boost_1_67_0/")
+    set(CPPRESTSDK_INCLUDE_DIR "../cpprestsdk/")
+    #find_package(Threads REQUIRED)
+
+    # message(FATAL_ERROR "-- Windows is not supported for now.")
+endif ()
+
+
+set(HEADER_SEARCH_PATHS ${CPPRESTSDK_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${OPENSSL_INCLUDE_DIR})
 
 # Configure compiler options ...
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -50,7 +51,6 @@ add_executable(server ./source/main.cpp
         ./source/service.cpp
         ./source/util.cpp
         )
-)
 
 # library search paths ...
 if (APPLE)
@@ -69,6 +69,7 @@ message(BOOST_LIBS " ${Boost_LIBRARIES}")
 message(OPENSSL_LIBS " ${OPENSSL_LIBRARIES}")
 message(CPPRESTSDK_LIBRARY " ${CPPRESTSDK_LIBRARY}")
 message(LIBRARIES_SEARCH_PATHS " ${LIBRARIES_SEARCH_PATHS}")
+message(HEADER_SEARCH_PATHS " ${HEADER_SEARCH_PATHS}")
 include_directories(${HEADER_SEARCH_PATHS})
 
 if (APPLE)
@@ -76,7 +77,9 @@ if (APPLE)
     target_link_libraries(${PROJECT_NAME} "-framework Security")
     target_link_libraries(${PROJECT_NAME} ${LIBRARIES_SEARCH_PATHS})
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-W1, -F/Library/Frameworks")
-else ()
+endif ()
+
+if (UNIX)
     target_link_libraries(${PROJECT_NAME} ${LIBRARIES_SEARCH_PATHS})
 endif ()
 
