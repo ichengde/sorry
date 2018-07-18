@@ -2,7 +2,11 @@
 // Created by liuchengde on 2018/7/15.
 //
 #include "service.hpp"
-#include "util.hpp"
+
+service::service(router &r) {
+    
+}
+
 
 std::function<void(web::http::http_request)> service::handle = [](web::http::http_request message) {
     util utility;

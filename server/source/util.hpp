@@ -11,7 +11,7 @@
 class util {
 public:
     static std::map<utility::string_t, utility::string_t> getParams(web::http::http_request message);
-    static std::vector<utility::string_t> getPath(web::http::http_request message);
+    static utility::string_t getPath(web::http::http_request message);
 };
 
 #endif //SERVER_UTIL_H
