@@ -15,6 +15,7 @@
 class service {
 public:
     service(router);
+
     static std::function<void(web::http::http_request)> handle;
     static std::function<void(web::http::http_request)> stackTrace;
     static std::function<void(web::http::http_request)> optionHandle;

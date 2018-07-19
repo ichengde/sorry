@@ -3,10 +3,6 @@
 //
 #include "service.hpp"
 
-service::service(router &r) {
-    
-}
-
 
 std::function<void(web::http::http_request)> service::handle = [](web::http::http_request message) {
     util utility;
@@ -23,3 +19,7 @@ std::function<void(web::http::http_request)> service::stackTrace = [](web::http:
 std::function<void(web::http::http_request)> service::optionHandle = [](web::http::http_request message) {
 
 };
+
+service::service(router) {
+
+}
