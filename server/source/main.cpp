@@ -4,9 +4,11 @@
 #include <codecvt>
 #include "router.hpp"
 #include "service.hpp"
-int main() {
 
-    web::http::experimental::listener::http_listener listener{router::getEndPoint()};
+using namespace web::http;
+
+int main() {
+    experimental::listener::http_listener listener{router::getEndPoint()};
 
     router r{listener};
     service s{r};

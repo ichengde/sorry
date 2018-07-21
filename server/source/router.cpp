@@ -4,10 +4,10 @@
 
 #include "router.hpp"
 
-router::router(web::http::experimental::listener::http_listener &listener) {
+router::router(http_listener &listener) {
     this->listener = &listener;
 
-    this->getHandler = [this](web::http::http_request message) {
+    this->getHandler = [this](http_request message) {
         util utility;
         auto path = utility.getPath(message);
 
@@ -17,11 +17,11 @@ router::router(web::http::experimental::listener::http_listener &listener) {
             }
         }
 
-        auto response = web::http::http_response(web::http::status_codes::NotFound);
+        auto response = http_response(status_codes::NotFound);
         message.reply(response);
     };
 
-    this->postHandler = [this](web::http::http_request message) {
+    this->postHandler = [this](http_request message) {
         util utility;
         auto params = utility.getParams(message);
         auto path = utility.getPath(message);
@@ -32,7 +32,7 @@ router::router(web::http::experimental::listener::http_listener &listener) {
             }
         }
 
-        auto response = web::http::http_response(web::http::status_codes::OK);
+        auto response = http_response(status_codes::OK);
         response.headers().add("Access-Control-Allow-Origin", "*");
         response.headers().add("Access-Control-Allow-Headers", "*");
 
@@ -40,8 +40,8 @@ router::router(web::http::experimental::listener::http_listener &listener) {
 
     };
 
-    this->optionHandler = [](web::http::http_request message) {
-        auto response = web::http::http_response(web::http::status_codes::OK);
+    this->optionHandler = [](http_request message) {
+        auto response = http_response(status_codes::OK);
 
         response.headers().add("Access-Control-Allow-Origin", "*");
         response.headers().add("Access-Control-Allow-Headers", "*");
@@ -50,9 +50,9 @@ router::router(web::http::experimental::listener::http_listener &listener) {
 
     };
 
-    listener.support(web::http::methods::GET, this->getHandler);
-    listener.support(web::http::methods::POST, this->postHandler);
-    listener.support(web::http::methods::OPTIONS, this->optionHandler);
+    listener.support(methods::GET, this->getHandler);
+    listener.support(methods::POST, this->postHandler);
+    listener.support(methods::OPTIONS, this->optionHandler);
 }
 
 web::uri router::getEndPoint() {
@@ -60,11 +60,11 @@ web::uri router::getEndPoint() {
             .set_host("0.0.0.0").set_port(5525).set_path("/").to_uri();
 }
 
-void router::get(const std::string &path, const std::function<void(web::http::http_request)> &handler) {
+void router::get(const std::string &path, const std::function<void(http_request)> &handler) {
     this->getHandleSet[path] = handler;
 }
 
-void router::post(const std::string &path, const std::function<void(web::http::http_request)> &handler) {
+void router::post(const std::string &path, const std::function<void(http_request)> &handler) {
     this->postHandleSet[path] = handler;
 }
 
