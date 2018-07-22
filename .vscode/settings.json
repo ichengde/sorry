@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "codecvt": "cpp"
+        "codecvt": "cpp",
+        "iosfwd": "cpp",
+        "string": "cpp"
     }
 }

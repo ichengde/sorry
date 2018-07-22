@@ -10,12 +10,18 @@
 #include "router.hpp"
 #include "util.hpp"
 
+#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/json.hpp>
+
+#include <mongocxx/client.hpp>
+#include <mongocxx/instance.hpp>
+
 using namespace web::http;
 
 class service {
 public:
     service(router);
-
+    void getCollection();
     static std::function<void(http_request)> handle;
     static std::function<void(http_request)> stackTrace;
     static std::function<void(http_request)> optionHandle;
