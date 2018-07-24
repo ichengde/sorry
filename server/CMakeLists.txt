@@ -7,11 +7,14 @@ set(CMAKE_CXX_STANDARD 17)
 
 # headers search paths ...
 set(CPPRESTSDK_INCLUDE_DIR "/usr/include")
+set(MONGOCXX_INCLUDE_DIR "/usr/local/include/mongocxx/v_noabi")  
+set(BSONCXX_INCLUDE_DIR "/usr/local/include/bsoncxx/v_noabi")  
 
 # Configure required libraries ...
 if (UNIX) # Darwing or Linux
   find_package(Boost REQUIRED COMPONENTS system thread log program_options chrono)
   find_package(Threads REQUIRED)
+
   if (APPLE)
     # Prefer a homebrew version of OpenSSL over the one in /usr/lib
     file(GLOB OPENSSL_ROOT_DIR /usr/local/Cellar/openssl/*)
@@ -35,7 +38,9 @@ if (WIN32) # Windows systems including Win64.
 endif ()
 
 
-set(HEADER_SEARCH_PATHS ${CPPRESTSDK_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${OPENSSL_INCLUDE_DIR})
+message(MONGOCXX_INCLUDE_DIR " ${MONGOCXX_INCLUDE_DIR}")
+message(BSONCXX_INCLUDE_DIR " ${BSONCXX_INCLUDE_DIR}")
+set(HEADER_SEARCH_PATHS ${CPPRESTSDK_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${OPENSSL_INCLUDE_DIR} ${BSONCXX_INCLUDE_DIR} ${MONGOCXX_INCLUDE_DIR})
 
 # Configure compiler options ...
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -56,8 +61,10 @@ add_executable(server ./source/main.cpp
 if (APPLE)
   set(OPENSSL_LIBS "/usr/local/Cellar/openssl/${OPENSSL_VERSION}/lib/libssl.1.0.0.dylib;/usr/local/Cellar/openssl/${OPENSSL_VERSION}/lib/libcrypto.1.0.0.dylib")
   set(CPPRESTSDK_LIBRARY "/usr/local/Cellar/cpprestsdk/2.10.2/lib/libcpprest.2.10.dylib;/usr/local/Cellar/cpprestsdk/2.10.2/lib/libcpprest.dylib")
+  set(BSONCXX_LIBRARY "/usr/local/lib/libbsoncxx.dylib")
+  set(MONGOCXX_LIBRARY "/usr/local/lib/libmongocxx.dylib")
 
-  set(LIBRARIES_SEARCH_PATHS ${OPENSSL_LIBS} ${Boost_LIBRARIES} ${CPPRESTSDK_LIBRARY})
+  set(LIBRARIES_SEARCH_PATHS ${OPENSSL_LIBS} ${Boost_LIBRARIES} ${CPPRESTSDK_LIBRARY} ${BSONCXX_LIBRARY} ${MONGOCXX_LIBRARY})
 else ()
   set(OPENSSL_LIBS "${OPENSSL_LIBRARIES}")
   set(CPPRESTSDK_LIBRARY "../cpprestsdk/Release/libcpprest.so")

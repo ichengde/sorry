@@ -3,27 +3,11 @@
 //
 #include "service.hpp"
 
-std::function<void(web::http::http_request)> service::handle = [](web::http::http_request message) {
-    util utility;
-    auto params = utility.getParams(message);
-    auto path = utility.getPath(message);
-
+service::service(router &r) {
+    r.get("/stacktrace", &(service::getCollection));
 };
 
-std::function<void(web::http::http_request)> service::stackTrace = [](web::http::http_request message) {
-
-
-};
-
-std::function<void(web::http::http_request)> service::optionHandle = [](web::http::http_request message) {
-
-};
-
-service::service(router) {
-
-}
-
-service::getCollection() {
+void service::getCollection(http_request message) {
     mongocxx::instance inst{};
     mongocxx::client conn{mongocxx::uri{}};
 

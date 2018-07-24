@@ -20,10 +20,7 @@ using namespace web::http;
 
 class service {
 public:
-    service(router);
-    void getCollection();
-    static std::function<void(http_request)> handle;
-    static std::function<void(http_request)> stackTrace;
-    static std::function<void(http_request)> optionHandle;
+    service(router &r);
+    static void getCollection(http_request message);
 };
 #endif //SERVER_SERVICE_H
