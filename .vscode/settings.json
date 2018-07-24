@@ -2,6 +2,29 @@
     "files.associations": {
         "codecvt": "cpp",
         "iosfwd": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "random": "cpp",
+        "*.ipp": "cpp",
+        "__functional_base": "cpp",
+        "array": "cpp",
+        "future": "cpp",
+        "istream": "cpp",
+        "locale": "cpp",
+        "memory": "cpp",
+        "thread": "cpp",
+        "tuple": "cpp",
+        "utility": "cpp",
+        "ostream": "cpp",
+        "slist": "cpp",
+        "cfenv": "cpp",
+        "type_traits": "cpp",
+        "__config": "cpp",
+        "__nullptr": "cpp",
+        "exception": "cpp",
+        "initializer_list": "cpp",
+        "new": "cpp",
+        "stdexcept": "cpp",
+        "typeinfo": "cpp",
+        "algorithm": "cpp"
     }
 }
