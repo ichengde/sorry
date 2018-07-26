@@ -6,3 +6,4 @@ boost*/
 cpprestsdk*/
 vcpkg*/
 CMakeFiles/
+*setting.hpp*
