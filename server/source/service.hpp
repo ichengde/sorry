@@ -18,11 +18,12 @@
 
 using namespace web::http;
 
-class service {
+class service
+{
 public:
-    service(router &r);
-    static void getCollection(http_request message);
-    static void test(http_request message);
-    static mongocxx::client conn;
+  service(router &r);
+  static void stacktrace(http_request message);
+  static void test(http_request message);
+  static mongocxx::client conn;
 };
 #endif //SERVER_SERVICE_H
