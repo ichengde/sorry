@@ -22,7 +22,7 @@ void service::stacktrace(http_request message)
   {
     util utilTool{};
 
-    bsoncxx::builder::stream::document document{};
+    auto builder = bsoncxx::builder::stream::document{};
     auto collection = service::conn["js-sorry"]["testcollection"];
 
     auto data = message.extract_json().get();
@@ -33,12 +33,14 @@ void service::stacktrace(http_request message)
       {
         for (auto dd : b.as_object())
         {
-          document << dd.first << dd.second;
+          std::cout << dd.first << dd.second << std::endl;
+          builder << dd.first << dd.second.to_string();
         }
+        bsoncxx::document::value di = builder << bsoncxx::builder::stream::finalize;
+        collection.insert_one(di.view());
       }
     }
 
-    collection.insert_one(document.view());
     /*
 auto cursor = collection.find({});
 
