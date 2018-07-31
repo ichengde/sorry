@@ -13,7 +13,7 @@ service::service(router &r)
 {
   mongocxx::instance inst{};
   r.post("/stacktrace", &service::stacktrace);
-  // r.get("/test", &(service::test));
+  r.get("/result", &(service::result));
 };
 
 void service::stacktrace(http_request message)
@@ -23,8 +23,8 @@ void service::stacktrace(http_request message)
     util utilTool{};
 
     auto builder = bsoncxx::builder::stream::document{};
-    auto collection = service::conn["js-sorry"]["testcollection"];
-
+    auto collection = service::conn["js-sorry"]["log"];
+    // should add collection one.
     auto data = message.extract_json().get();
     if (data.is_object())
     {
@@ -66,5 +66,27 @@ void service::test(http_request message)
   http_response b;
   b.set_status_code(status_codes::OK);
   b.set_body("my test");
+  message.reply(b);
+}
+
+void service::result(http_request message)
+{
+  http_response b;
+
+  auto build = bsoncxx::builder::stream::document{};
+  auto collection = service::conn["js-sorry"]["log"];
+
+  auto ans = collection.find({});
+
+  auto in_array = build << "stack" << bsoncxx::builder::stream::open_array;
+  for (auto a : ans)
+  {
+    in_array << a;
+  }
+  auto after_array = in_array << bsoncxx::builder::stream::close_array;
+  auto doc = after_array << bsoncxx::builder::stream::finalize;
+
+  b.set_status_code(status_codes::OK);
+  b.set_body(bsoncxx::to_json(doc));
   message.reply(b);
 }
