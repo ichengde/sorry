@@ -24,6 +24,8 @@ void service::stacktrace(http_request message)
 
     auto builder = bsoncxx::builder::stream::document{};
     auto collection = service::conn["js-sorry"]["log"];
+    std::vector<bsoncxx::document::value> logs;
+
     // should add collection one.
     auto data = message.extract_json().get();
     if (data.is_object())
@@ -36,18 +38,12 @@ void service::stacktrace(http_request message)
           std::cout << dd.first << dd.second << std::endl;
           builder << dd.first << dd.second.to_string();
         }
-        bsoncxx::document::value di = builder << bsoncxx::builder::stream::finalize;
-        collection.insert_one(di.view());
+        bsoncxx::document::value log = builder << bsoncxx::builder::stream::finalize;
+        logs.push_back(log);
       }
+      collection.insert_many(logs);
     }
 
-    /*
-auto cursor = collection.find({});
-
-for (auto&& doc : cursor) {
-std::cout << bsoncxx::to_json(doc) << std::endl;
-}
-*/
     auto response = http_response(status_codes::OK);
     response.headers().add("Access-Control-Allow-Origin", "*");
     response.headers().add("Access-Control-Allow-Headers", "*");
@@ -76,12 +72,12 @@ void service::result(http_request message)
   auto build = bsoncxx::builder::stream::document{};
   auto collection = service::conn["js-sorry"]["log"];
 
-  auto ans = collection.find({});
-
+  auto logs = collection.find({});
+  // mongocxx::cursor resu = mongocxx::collection::aggregate{mongocxx::pipeline::limit{10}, logs};
   auto in_array = build << "stack" << bsoncxx::builder::stream::open_array;
-  for (auto a : ans)
+  for (auto log : logs)
   {
-    in_array << a;
+    in_array << log;
   }
   auto after_array = in_array << bsoncxx::builder::stream::close_array;
   auto doc = after_array << bsoncxx::builder::stream::finalize;
