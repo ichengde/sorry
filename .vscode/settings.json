@@ -35,6 +35,18 @@
         "map": "cpp",
         "set": "cpp",
         "unordered_map": "cpp",
-        "*.dat": "cpp"
+        "*.dat": "cpp",
+        "cstddef": "cpp",
+        "optional": "cpp",
+        "variant": "cpp",
+        "unordered_set": "cpp",
+        "stack": "cpp",
+        "chrono": "cpp",
+        "deque": "cpp",
+        "vector": "cpp",
+        "__split_buffer": "cpp",
+        "iterator": "cpp",
+        "list": "cpp",
+        "valarray": "cpp"
     }
 }

@@ -13,9 +13,9 @@ using namespace web::http;
 class util
 {
 public:
-  static std::map<utility::string_t, utility::string_t> getParams(http_request message);
+  static std::map<utility::string_t, utility::string_t> getParams(http_request &message);
 
-  static utility::string_t getPath(http_request message);
+  static utility::string_t getPath(http_request &message);
 };
 
 #endif //SERVER_UTIL_H

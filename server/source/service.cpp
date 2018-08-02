@@ -67,22 +67,42 @@ void service::test(http_request message)
 
 void service::result(http_request message)
 {
-  http_response b;
+  util u;
+  auto params = u.getParams(message);
+  auto count = params.find("count");
+  int resultCount = count != params.end() ? std::stoi(count->second) : 10;
+  std::cout << resultCount;
 
-  auto build = bsoncxx::builder::stream::document{};
-  auto collection = service::conn["js-sorry"]["log"];
-
-  auto logs = collection.find({});
-  // mongocxx::cursor resu = mongocxx::collection::aggregate{mongocxx::pipeline::limit{10}, logs};
-  auto in_array = build << "stack" << bsoncxx::builder::stream::open_array;
-  for (auto log : logs)
+  for (auto dd : params)
   {
-    in_array << log;
+    std::cout << dd.first << dd.second;
   }
-  auto after_array = in_array << bsoncxx::builder::stream::close_array;
-  auto doc = after_array << bsoncxx::builder::stream::finalize;
 
-  b.set_status_code(status_codes::OK);
-  b.set_body(bsoncxx::to_json(doc));
-  message.reply(b);
+  try
+  {
+    http_response resp;
+
+    auto build = bsoncxx::builder::stream::document{};
+    auto collection = service::conn["js-sorry"]["log"];
+    auto pipe = mongocxx::pipeline{};
+    auto logs = collection.aggregate(pipe.limit(resultCount));
+
+    // auto logs = collection.find({});
+    auto in_array = build << "stack" << bsoncxx::builder::stream::open_array;
+    for (auto log : logs)
+    {
+      in_array << log;
+    }
+    auto after_array = in_array << bsoncxx::builder::stream::close_array;
+    auto doc = after_array << bsoncxx::builder::stream::finalize;
+
+    resp.set_status_code(status_codes::OK);
+    resp.set_body(bsoncxx::to_json(doc));
+    message.reply(resp);
+  }
+  catch (std::exception &e)
+  {
+    std::cout << "Error occurred connect database: %s\n"
+              << e.what();
+  }
 }
