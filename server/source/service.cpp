@@ -71,12 +71,6 @@ void service::result(http_request message)
   auto params = u.getParams(message);
   auto count = params.find("count");
   int resultCount = count != params.end() ? std::stoi(count->second) : 10;
-  std::cout << resultCount;
-
-  for (auto dd : params)
-  {
-    std::cout << dd.first << dd.second;
-  }
 
   try
   {
@@ -103,6 +97,16 @@ void service::result(http_request message)
   catch (std::exception &e)
   {
     std::cout << "Error occurred connect database: %s\n"
-              << e.what();
+              << e.what()
+              << std::endl
+              << strstr(e.what(), "connection timeout")
+              << std::endl;
+
+    http_response resp;
+    resp.set_status_code(status_codes::InternalError);
+    resp.set_body(bsoncxx::to_json(bsoncxx::builder::stream::document{} << "code"
+                                                                        << "error"
+                                                                        << bsoncxx::builder::stream::finalize));
+    message.reply(resp);
   }
 }
