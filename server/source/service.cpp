@@ -90,6 +90,9 @@ void service::result(http_request message)
     auto after_array = in_array << bsoncxx::builder::stream::close_array;
     auto doc = after_array << bsoncxx::builder::stream::finalize;
 
+    resp.headers().add("Content-Type", "application/json");
+    resp.headers().add("Access-Control-Allow-Origin", "*");
+    resp.headers().add("Access-Control-Allow-Headers", "*");
     resp.set_status_code(status_codes::OK);
     resp.set_body(bsoncxx::to_json(doc));
     message.reply(resp);

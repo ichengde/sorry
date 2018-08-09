@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Http } from "@angular/http";
+import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 
 
 @Component({
@@ -10,12 +10,14 @@ import { Http } from "@angular/http";
 export class AppComponent {
   title = 'client';
   list;
-  constructor(public http: Http) {
+  constructor(
+    private http: HttpClient,
+  ) {
     this.getList();
   }
   getList() {
-    this.http.get('http://127.0.0.1:5525/result').subscribe((res) => {
-      this.list = res;
+    this.http.get('http://127.0.0.1:5525/result').subscribe((res: any) => {
+      this.list = res.stack;
     });
   }
 }
