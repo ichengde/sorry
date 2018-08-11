@@ -47,6 +47,10 @@
         "__split_buffer": "cpp",
         "iterator": "cpp",
         "list": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "fstream": "cpp",
+        "sstream": "cpp",
+        "strstream": "cpp",
+        "ios": "cpp"
     }
 }

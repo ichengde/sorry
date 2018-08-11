@@ -4,15 +4,20 @@
 #include <codecvt>
 #include "router.hpp"
 #include "service.hpp"
+#include "util.hpp"
 
 using namespace web::http;
 
-int main() {
+int main()
+{
     experimental::listener::http_listener listener{router::getEndPoint()};
+
+    auto p = util::readConfigFile();
 
     router r{listener};
     service s{r};
-    try {
+    try
+    {
         std::cout << "sorry server start" << std::endl;
         listener.open().wait();
 
@@ -21,9 +26,9 @@ int main() {
 
         listener.close().wait();
     }
-    catch (std::exception &e) {
-        std::cout << "Error occurred sending response: %s\n" << e.what();
+    catch (std::exception &e)
+    {
+        std::cout << "Error occurred sending response: %s\n"
+                  << e.what();
     }
-
-
 }

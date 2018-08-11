@@ -8,9 +8,9 @@ namespace setting
 {
 namespace database
 {
-const std::string host = "193.112.22.19";
-const std::string user = "js-sorry-user";
-const std::string password = "123456";
+const std::string host = "";
+const std::string user = "";
+const std::string password = "";
 } // namespace database
 } // namespace setting
 
