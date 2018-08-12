@@ -4,15 +4,12 @@
 #include <codecvt>
 #include "router.hpp"
 #include "service.hpp"
-#include "util.hpp"
 
 using namespace web::http;
 
 int main()
 {
     experimental::listener::http_listener listener{router::getEndPoint()};
-
-    auto p = util::readConfigFile();
 
     router r{listener};
     service s{r};

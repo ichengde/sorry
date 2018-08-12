@@ -33,7 +33,6 @@ std::map<std::string, std::string> util::readConfigFile()
 
     while (configStream >> configKey >> configValue, !configStream.eof())
     {
-        std::cout << configKey << " " << configValue << std::endl;
         configParmasMap[configKey] = configValue;
     }
 

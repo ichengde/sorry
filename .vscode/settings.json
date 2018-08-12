@@ -51,6 +51,11 @@
         "fstream": "cpp",
         "sstream": "cpp",
         "strstream": "cpp",
-        "ios": "cpp"
+        "ios": "cpp",
+        "__functional_03": "cpp",
+        "functional": "cpp",
+        "system_error": "cpp",
+        "cstdlib": "cpp",
+        "__locale": "cpp"
     }
 }

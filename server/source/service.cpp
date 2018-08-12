@@ -4,10 +4,10 @@
 #include "service.hpp"
 #include "setting.hpp"
 #include "util.hpp"
-
+setting::database& mySetting = setting::database::Instance();
 mongocxx::client service::conn = mongocxx::client{mongocxx::uri{
-    "mongodb://" + setting::database::user + ":" + setting::database::password +
-    "@" + setting::database::host + "/js-sorry"}};
+    "mongodb://" + mySetting.user + ":" + mySetting.password +
+    "@" + mySetting.host + "/js-sorry"}};
 
 service::service(router &r)
 {
