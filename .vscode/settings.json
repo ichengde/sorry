@@ -56,6 +56,7 @@
         "functional": "cpp",
         "system_error": "cpp",
         "cstdlib": "cpp",
-        "__locale": "cpp"
+        "__locale": "cpp",
+        "iostream": "cpp"
     }
 }

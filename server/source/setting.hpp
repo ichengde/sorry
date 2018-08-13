@@ -27,8 +27,26 @@ public:
 private:
   database()
   {
-    auto p = util::readConfigFile();
-    std::vector<std::string> v = {"host", "username", "password"};
+    std::map<std::string, std::string> p = util::readConfigFile();
+    std::map<std::string, std::string> *dd = &p;
+    std::map<std::string, std::string database::*> v = {
+        {"host", &database::host},
+        {"username", &database::user},
+        {"password", &database::password},
+    };
+
+    for (auto vpair : v)
+    {
+      auto ans = p.find(vpair.first);
+      if (ans != p.end())
+      {
+        this->*(vpair.second) = ans->second;
+      }
+    }
+
+    std::cout << this->host << std::endl;
+    std::cout << this->user << std::endl;
+    std::cout << this->password << std::endl;
 
   };                                     // ctor hidden
   database(database const &);            // copy ctor hidden
