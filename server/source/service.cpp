@@ -14,6 +14,8 @@ service::service(router &r)
   mongocxx::instance inst{};
   r.post("/stacktrace", &service::stacktrace);
   r.get("/result", &(service::result));
+  // r.post("/login", &service::login);
+  // r.post("/resigter", &service::resigter);
 };
 
 void service::stacktrace(http_request message)
