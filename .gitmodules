@@ -1,3 +1,6 @@
 [submodule "stacktrace.js"]
 	path = stacktrace.js
 	url = https://github.com/stacktracejs/stacktrace.js.git
+[submodule "server/doctest"]
+	path = server/doctest
+	url = https://github.com/onqtam/doctest.git
