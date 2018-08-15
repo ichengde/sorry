@@ -23,6 +23,7 @@ class service
 public:
   service(router &r);
   static void stacktrace(http_request message);
+  static void resigter(http_request message);
   static void result(http_request message);
   static void test(http_request message);
   static mongocxx::client conn;

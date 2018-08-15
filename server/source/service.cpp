@@ -4,7 +4,7 @@
 #include "service.hpp"
 #include "setting.hpp"
 #include "util.hpp"
-setting::database& mySetting = setting::database::Instance();
+setting::database &mySetting = setting::database::Instance();
 mongocxx::client service::conn = mongocxx::client{mongocxx::uri{
     "mongodb://" + mySetting.user + ":" + mySetting.password +
     "@" + mySetting.host + "/js-sorry"}};
@@ -15,7 +15,7 @@ service::service(router &r)
   r.post("/stacktrace", &service::stacktrace);
   r.get("/result", &(service::result));
   // r.post("/login", &service::login);
-  // r.post("/resigter", &service::resigter);
+  r.post("/resigter", &service::resigter);
 };
 
 void service::stacktrace(http_request message)
@@ -114,4 +114,40 @@ void service::result(http_request message)
                                                                         << bsoncxx::builder::stream::finalize));
     message.reply(resp);
   }
+}
+
+void service::resigter(http_request message)
+{
+  try
+  {
+    util utilTool{};
+
+    auto builder = bsoncxx::builder::stream::document{};
+    auto collection = service::conn["js-sorry"]["user"];
+    std::vector<bsoncxx::document::value> user;
+
+    // should add collection one.
+    auto data = message.extract_json().get();
+    if (data.is_object())
+    {
+      auto stack = data.at("user");
+      auto userData = data.as_object();
+
+      builder << "user" << userData.at("user").to_string();
+      builder << "password" << userData.at("password").to_string();
+      bsoncxx::document::value emitUserData = builder << bsoncxx::builder::stream::finalize;
+      collection.insert_one(emitUserData.view());
+    }
+
+    auto response = http_response(status_codes::OK);
+    response.headers().add("Access-Control-Allow-Origin", "*");
+    response.headers().add("Access-Control-Allow-Headers", "*");
+    message.reply(response);
+  }
+  catch (std::exception &e)
+  {
+    std::cout << "Error occurred connect database: %s\n"
+              << e.what();
+  }
+  message.reply(status_codes::InternalError);
 }
