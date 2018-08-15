@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CPPRESTSDK_INCLUDE_DIR "/usr/include")
 set(MONGOCXX_INCLUDE_DIR "/usr/local/include/mongocxx/v_noabi")  
 set(BSONCXX_INCLUDE_DIR "/usr/local/include/bsoncxx/v_noabi")  
+set(DOCTEST_INCLUDE_DIR "./doctest/doctest")
 
 # Configure required libraries ...
 if (UNIX) # Darwing or Linux
@@ -40,7 +41,13 @@ endif ()
 
 message(MONGOCXX_INCLUDE_DIR " ${MONGOCXX_INCLUDE_DIR}")
 message(BSONCXX_INCLUDE_DIR " ${BSONCXX_INCLUDE_DIR}")
-set(HEADER_SEARCH_PATHS ${CPPRESTSDK_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${OPENSSL_INCLUDE_DIR} ${BSONCXX_INCLUDE_DIR} ${MONGOCXX_INCLUDE_DIR})
+
+set(HEADER_SEARCH_PATHS ${CPPRESTSDK_INCLUDE_DIR} 
+                        ${Boost_INCLUDE_DIR} 
+                        ${OPENSSL_INCLUDE_DIR}  
+                        ${BSONCXX_INCLUDE_DIR} 
+                        ${MONGOCXX_INCLUDE_DIR}
+                        ${DOCTEST_INCLUDE_DIR})
 
 # Configure compiler options ...
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -56,6 +63,8 @@ add_executable(server ./source/main.cpp
   ./source/service.cpp
   ./source/util.cpp
   )
+
+add_executable(server_test ./test/source/main.cpp)
 
 # library search paths ...
 if (APPLE)
