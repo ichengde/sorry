@@ -6,7 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 # headers search paths ...
-set(CPPRESTSDK_INCLUDE_DIR "/usr/include")
+set(CPPRESTSDK_INCLUDE_DIR "/usr/local/include")
+set(BOOST_INCLUDE_DIR "/usr/local/include/boost")
 set(MONGOCXX_INCLUDE_DIR "/usr/local/include/mongocxx/v_noabi")  
 set(BSONCXX_INCLUDE_DIR "/usr/local/include/bsoncxx/v_noabi")  
 set(DOCTEST_INCLUDE_DIR "./doctest/doctest")
@@ -31,7 +32,7 @@ if (UNIX) # Darwing or Linux
 endif ()
 
 if (WIN32) # Windows systems including Win64.
-  set(Boost_INCLUDE_DIR "../boost_1_67_0/")
+  set(BOOST_INCLUDE_DIR "../boost_1_67_0/")
   set(CPPRESTSDK_INCLUDE_DIR "../cpprestsdk/")
   #find_package(Threads REQUIRED)
 
@@ -43,7 +44,7 @@ message(MONGOCXX_INCLUDE_DIR " ${MONGOCXX_INCLUDE_DIR}")
 message(BSONCXX_INCLUDE_DIR " ${BSONCXX_INCLUDE_DIR}")
 
 set(HEADER_SEARCH_PATHS ${CPPRESTSDK_INCLUDE_DIR} 
-                        ${Boost_INCLUDE_DIR} 
+                        ${BOOST_INCLUDE_DIR} 
                         ${OPENSSL_INCLUDE_DIR}  
                         ${BSONCXX_INCLUDE_DIR} 
                         ${MONGOCXX_INCLUDE_DIR}
@@ -71,17 +72,19 @@ if (APPLE)
   set(OPENSSL_LIBS "/usr/local/Cellar/openssl/${OPENSSL_VERSION}/lib/libssl.1.0.0.dylib;/usr/local/Cellar/openssl/${OPENSSL_VERSION}/lib/libcrypto.1.0.0.dylib")
   set(CPPRESTSDK_LIBRARY "/usr/local/Cellar/cpprestsdk/2.10.2/lib/libcpprest.2.10.dylib;/usr/local/Cellar/cpprestsdk/2.10.2/lib/libcpprest.dylib")
   set(BSONCXX_LIBRARY "/usr/local/lib/libbsoncxx.dylib")
+  set(BSONCXX_LIBRARY "/usr/local/lib/libbsoncxx.dylib")
   set(MONGOCXX_LIBRARY "/usr/local/lib/libmongocxx.dylib")
+  set(BOOST_LIBRARIES "/usr/local/lib/libcrypto.1.0.0.dylib")
 
-  set(LIBRARIES_SEARCH_PATHS ${OPENSSL_LIBS} ${Boost_LIBRARIES} ${CPPRESTSDK_LIBRARY} ${BSONCXX_LIBRARY} ${MONGOCXX_LIBRARY})
+  set(LIBRARIES_SEARCH_PATHS ${OPENSSL_LIBS} ${BOOST_LIBRARIES} ${CPPRESTSDK_LIBRARY} ${BSONCXX_LIBRARY} ${MONGOCXX_LIBRARY})
 else ()
   set(OPENSSL_LIBS "${OPENSSL_LIBRARIES}")
   set(CPPRESTSDK_LIBRARY "../cpprestsdk/Release/libcpprest.so")
 
-  set(LIBRARIES_SEARCH_PATHS ${CPPRESTSDK_LIBRARY} ${OPENSSL_LIBS} ${Boost_LIBRARIES})
+  set(LIBRARIES_SEARCH_PATHS ${CPPRESTSDK_LIBRARY} ${OPENSSL_LIBS} ${BOOST_LIBRARIES})
 endif ()
 
-message(BOOST_LIBS " ${Boost_LIBRARIES}")
+message(BOOST_LIBS " ${BOOST_LIBRARIES}")
 message(OPENSSL_LIBS " ${OPENSSL_LIBRARIES}")
 message(CPPRESTSDK_LIBRARY " ${CPPRESTSDK_LIBRARY}")
 message(LIBRARIES_SEARCH_PATHS " ${LIBRARIES_SEARCH_PATHS}")
