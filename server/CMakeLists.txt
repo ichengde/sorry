@@ -7,10 +7,10 @@ set(CMAKE_CXX_STANDARD 17)
 
 # headers search paths ...
 set(CPPRESTSDK_INCLUDE_DIR "/usr/local/include")
-set(BOOST_INCLUDE_DIR "/usr/local/include/boost")
+set(BOOST_INCLUDE_DIR "/usr/local/Cellar/boost/1.67.0_1")
 set(MONGOCXX_INCLUDE_DIR "/usr/local/include/mongocxx/v_noabi")
 set(BSONCXX_INCLUDE_DIR "/usr/local/include/bsoncxx/v_noabi")
-set(OPENSSL_INCLUDE_DIR "/usr/local/Cellar/openssl/1.0.2f/include")
+set(OPENSSL_INCLUDE_DIR "/usr/local/Cellar/openssl/1.0.2p/include")
 set(DOCTEST_INCLUDE_DIR "./doctest/doctest")
 
 # Configure required libraries ...
@@ -22,14 +22,15 @@ if (UNIX) # Darwing or Linux
     #list(REVERSE OPENSSL_ROOT_DIR)
 
     find_package(OpenSSL 1.0.2 REQUIRED)
-    set(OPENSSL_VERSION "1.0.2f")
+    set(OPENSSL_VERSION "1.0.2p")
   else ()
     find_package(OpenSSL 1.0.1 REQUIRED)
     set(OPENSSL_VERSION "1.0.1")
   endif ()
 
 
-  find_package(Boost REQUIRED COMPONENTS thread system log program_options chrono)
+  file(GLOB BOOST_ROOT_DIR /usr/local/Cellar/boost/*)
+  find_package(Boost 1.67 REQUIRED COMPONENTS thread system log program_options chrono)
   find_package(Threads REQUIRED)
 endif ()
 
@@ -63,7 +64,7 @@ add_executable(server ./source/main.cpp
   ./source/util.cpp
   )
 
-add_executable(server_test ./test/source/main.cpp)
+add_executable(server_test ./test/source/test.cpp)
 
 # library search paths ...
 if (APPLE)
@@ -72,10 +73,8 @@ if (APPLE)
   set(BSONCXX_LIBRARY "/usr/local/lib/libbsoncxx.dylib")
   set(BSONCXX_LIBRARY "/usr/local/lib/libbsoncxx.dylib")
   set(MONGOCXX_LIBRARY "/usr/local/lib/libmongocxx.dylib")
-  #set(BOOST_LIBRARIES "/usr/local/lib/")
 
-
-  set(LIBRARIES_SEARCH_PATHS ${OPENSSL_LIBS} ${CPPRESTSDK_LIBRARY} ${BSONCXX_LIBRARY} ${MONGOCXX_LIBRARY})
+  set(LIBRARIES_SEARCH_PATHS ${OPENSSL_LIBS} ${Boost_LIBRARIES} ${CPPRESTSDK_LIBRARY} ${BSONCXX_LIBRARY} ${MONGOCXX_LIBRARY})
 else ()
   set(OPENSSL_LIBS "${OPENSSL_LIBRARIES}")
   set(CPPRESTSDK_LIBRARY "../cpprestsdk/Release/libcpprest.so")
@@ -83,6 +82,7 @@ else ()
   set(LIBRARIES_SEARCH_PATHS ${CPPRESTSDK_LIBRARY} ${OPENSSL_LIBS})
 endif ()
 
+message(Boost_LIBRARIES " ${Boost_LIBRARIES}")
 message(HEADER_SEARCH_PATHS " ${HEADER_SEARCH_PATHS}")
 message(LIBRARIES_SEARCH_PATHS " ${LIBRARIES_SEARCH_PATHS}")
 include_directories(${HEADER_SEARCH_PATHS})
@@ -92,6 +92,11 @@ if (APPLE)
   target_link_libraries(${PROJECT_NAME} "-framework Security")
   target_link_libraries(${PROJECT_NAME} ${LIBRARIES_SEARCH_PATHS})
   set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-W1, -F/Library/Frameworks")
+
+  target_link_libraries(server_test "-framework CoreFoundation")
+  target_link_libraries(server_test "-framework Security")
+  target_link_libraries(server_test ${LIBRARIES_SEARCH_PATHS})
+  set_target_properties(server_test PROPERTIES LINK_FLAGS "-W1, -F/Library/Frameworks")
 else ()
   if (UNIX)
     target_link_libraries(${PROJECT_NAME} ${LIBRARIES_SEARCH_PATHS})
