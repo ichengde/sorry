@@ -4,7 +4,7 @@
 
 #include <cpprest/http_client.h>
 #include <cpprest/json.h>
-#include "doctest.h"
+#include <doctest.h>
 
 using namespace utility;
 using namespace web::http;

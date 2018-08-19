@@ -8,20 +8,18 @@ set(CMAKE_CXX_STANDARD 17)
 # headers search paths ...
 set(CPPRESTSDK_INCLUDE_DIR "/usr/local/include")
 set(BOOST_INCLUDE_DIR "/usr/local/include/boost")
-set(MONGOCXX_INCLUDE_DIR "/usr/local/include/mongocxx/v_noabi")  
-set(BSONCXX_INCLUDE_DIR "/usr/local/include/bsoncxx/v_noabi")  
+set(MONGOCXX_INCLUDE_DIR "/usr/local/include/mongocxx/v_noabi")
+set(BSONCXX_INCLUDE_DIR "/usr/local/include/bsoncxx/v_noabi")
+set(OPENSSL_INCLUDE_DIR "/usr/local/Cellar/openssl/1.0.2f/include")
 set(DOCTEST_INCLUDE_DIR "./doctest/doctest")
 
 # Configure required libraries ...
 if (UNIX) # Darwing or Linux
-  find_package(Boost REQUIRED COMPONENTS system thread log program_options chrono)
-  find_package(Threads REQUIRED)
-
   if (APPLE)
     # Prefer a homebrew version of OpenSSL over the one in /usr/lib
     file(GLOB OPENSSL_ROOT_DIR /usr/local/Cellar/openssl/*)
     # Prefer the latest (make the latest one first)
-    list(REVERSE OPENSSL_ROOT_DIR)
+    #list(REVERSE OPENSSL_ROOT_DIR)
 
     find_package(OpenSSL 1.0.2 REQUIRED)
     set(OPENSSL_VERSION "1.0.2f")
@@ -29,6 +27,10 @@ if (UNIX) # Darwing or Linux
     find_package(OpenSSL 1.0.1 REQUIRED)
     set(OPENSSL_VERSION "1.0.1")
   endif ()
+
+
+  find_package(Boost REQUIRED COMPONENTS thread system log program_options chrono)
+  find_package(Threads REQUIRED)
 endif ()
 
 if (WIN32) # Windows systems including Win64.
@@ -38,10 +40,6 @@ if (WIN32) # Windows systems including Win64.
 
   # message(FATAL_ERROR "-- Windows is not supported for now.")
 endif ()
-
-
-message(MONGOCXX_INCLUDE_DIR " ${MONGOCXX_INCLUDE_DIR}")
-message(BSONCXX_INCLUDE_DIR " ${BSONCXX_INCLUDE_DIR}")
 
 set(HEADER_SEARCH_PATHS ${CPPRESTSDK_INCLUDE_DIR} 
                         ${BOOST_INCLUDE_DIR} 
@@ -69,26 +67,24 @@ add_executable(server_test ./test/source/main.cpp)
 
 # library search paths ...
 if (APPLE)
-  set(OPENSSL_LIBS "/usr/local/Cellar/openssl/${OPENSSL_VERSION}/lib/libssl.1.0.0.dylib;/usr/local/Cellar/openssl/${OPENSSL_VERSION}/lib/libcrypto.1.0.0.dylib")
+  set(OPENSSL_LIBS "/usr/local/Cellar/openssl/${OPENSSL_VERSION}/lib/libcrypto.dylib;/usr/local/Cellar/openssl/${OPENSSL_VERSION}/lib/libssl.dylib")
   set(CPPRESTSDK_LIBRARY "/usr/local/Cellar/cpprestsdk/2.10.2/lib/libcpprest.2.10.dylib;/usr/local/Cellar/cpprestsdk/2.10.2/lib/libcpprest.dylib")
   set(BSONCXX_LIBRARY "/usr/local/lib/libbsoncxx.dylib")
   set(BSONCXX_LIBRARY "/usr/local/lib/libbsoncxx.dylib")
   set(MONGOCXX_LIBRARY "/usr/local/lib/libmongocxx.dylib")
-  set(BOOST_LIBRARIES "/usr/local/lib/libcrypto.1.0.0.dylib")
+  #set(BOOST_LIBRARIES "/usr/local/lib/")
 
-  set(LIBRARIES_SEARCH_PATHS ${OPENSSL_LIBS} ${BOOST_LIBRARIES} ${CPPRESTSDK_LIBRARY} ${BSONCXX_LIBRARY} ${MONGOCXX_LIBRARY})
+
+  set(LIBRARIES_SEARCH_PATHS ${OPENSSL_LIBS} ${CPPRESTSDK_LIBRARY} ${BSONCXX_LIBRARY} ${MONGOCXX_LIBRARY})
 else ()
   set(OPENSSL_LIBS "${OPENSSL_LIBRARIES}")
   set(CPPRESTSDK_LIBRARY "../cpprestsdk/Release/libcpprest.so")
 
-  set(LIBRARIES_SEARCH_PATHS ${CPPRESTSDK_LIBRARY} ${OPENSSL_LIBS} ${BOOST_LIBRARIES})
+  set(LIBRARIES_SEARCH_PATHS ${CPPRESTSDK_LIBRARY} ${OPENSSL_LIBS})
 endif ()
 
-message(BOOST_LIBS " ${BOOST_LIBRARIES}")
-message(OPENSSL_LIBS " ${OPENSSL_LIBRARIES}")
-message(CPPRESTSDK_LIBRARY " ${CPPRESTSDK_LIBRARY}")
-message(LIBRARIES_SEARCH_PATHS " ${LIBRARIES_SEARCH_PATHS}")
 message(HEADER_SEARCH_PATHS " ${HEADER_SEARCH_PATHS}")
+message(LIBRARIES_SEARCH_PATHS " ${LIBRARIES_SEARCH_PATHS}")
 include_directories(${HEADER_SEARCH_PATHS})
 
 if (APPLE)
