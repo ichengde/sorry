@@ -33,12 +33,17 @@ void service::stacktrace(http_request message)
     if (data.is_object())
     {
       auto stack = data.at("stack");
+      auto project = data.at("project");
       for (auto b : stack.as_array())
       {
         for (auto dd : b.as_object())
         {
           std::cout << dd.first << dd.second << std::endl;
           builder << dd.first << dd.second.to_string();
+        }
+        if (project.is_string())
+        {
+          builder << "project" << project.to_string();
         }
         bsoncxx::document::value log = builder << bsoncxx::builder::stream::finalize;
         logs.push_back(log);

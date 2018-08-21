@@ -2,6 +2,8 @@
 #include <cpprest/http_listener.h>
 #include <cpprest/http_headers.h>
 #include <codecvt>
+#include <cpprest/http_client.h>
+#include <cpprest/json.h>
 #include "router.hpp"
 #include "service.hpp"
 
@@ -28,4 +30,22 @@ int main()
         std::cout << "Error occurred sending response: %s\n"
                   << e.what();
     }
+}
+
+
+void resigter()
+{
+    web::http::client::http_client resigter_client(U("http://127.0.0.1/"));
+
+    web::json::value userData = web::json::value::object();
+    userData["user"] = web::json::value::string("js-sorry-1");
+    userData["password"] = web::json::value::string("js-sorry-password");
+
+    resigter_client.request(
+                       methods::POST,
+                       uri_builder(U("/resigter")).set_port(5525).to_string(),
+                       userData)
+        .then([=](http_response response) {
+            printf("Response status code %u returned.\n", response.status_code());
+        });
 }
