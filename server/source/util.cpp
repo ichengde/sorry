@@ -4,14 +4,14 @@
 
 #include "util.hpp"
 
-std::map<utility::string_t, utility::string_t> util::getParams(web::http::http_request &message)
+std::map<utility::string_t, utility::string_t> util::getParams(const web::http::http_request &message)
 {
     auto query = web::uri::decode(message.relative_uri().query());
     auto params = web::uri::split_query(query);
     return params;
 }
 
-utility::string_t util::getPath(web::http::http_request &message)
+utility::string_t util::getPath(const web::http::http_request &message)
 {
     auto relativePath = web::uri::decode(message.relative_uri().path());
     return relativePath;

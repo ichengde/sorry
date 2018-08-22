@@ -18,7 +18,7 @@ service::service(router &r)
   r.post("/resigter", &service::resigter);
 };
 
-void service::stacktrace(http_request message)
+void service::stacktrace(const http_request &message)
 {
   try
   {
@@ -64,7 +64,7 @@ void service::stacktrace(http_request message)
   message.reply(status_codes::InternalError);
 }
 
-void service::test(http_request message)
+void service::test(const http_request &message)
 {
   http_response b;
   b.set_status_code(status_codes::OK);
@@ -72,7 +72,7 @@ void service::test(http_request message)
   message.reply(b);
 }
 
-void service::result(http_request message)
+void service::result(const http_request &message)
 {
   util u;
   auto params = u.getParams(message);
@@ -121,7 +121,7 @@ void service::result(http_request message)
   }
 }
 
-void service::resigter(http_request message)
+void service::resigter(const http_request &message)
 {
   try
   {
@@ -130,9 +130,10 @@ void service::resigter(http_request message)
     auto builder = bsoncxx::builder::stream::document{};
     auto collection = service::conn["js-sorry"]["user"];
     std::vector<bsoncxx::document::value> user;
-
+    std::cout << "in resigter" << std::endl;
     // should add collection one.
     auto data = message.extract_json().get();
+    std::cout << data.to_string();
     if (data.is_object())
     {
       auto stack = data.at("user");
@@ -143,10 +144,19 @@ void service::resigter(http_request message)
       bsoncxx::document::value emitUserData = builder << bsoncxx::builder::stream::finalize;
       collection.insert_one(emitUserData.view());
     }
+    else
+    {
+      auto response = http_response(status_codes::InternalError);
+      response.headers().add("Access-Control-Allow-Origin", "*");
+      response.headers().add("Access-Control-Allow-Headers", "*");
+      response.set_body("error");
+      message.reply(response);
+    }
 
     auto response = http_response(status_codes::OK);
     response.headers().add("Access-Control-Allow-Origin", "*");
     response.headers().add("Access-Control-Allow-Headers", "*");
+    response.set_body("successfully");
     message.reply(response);
   }
   catch (std::exception &e)
