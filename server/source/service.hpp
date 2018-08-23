@@ -23,7 +23,7 @@ class service
 public:
   service(router &r);
   static void stacktrace(const http_request &message);
-  static void resigter(const http_request &message);
+  static void registerUser(const http_request &message);
   static void result(const http_request &message);
   static void test(const http_request &message);
   static mongocxx::client conn;

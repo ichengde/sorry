@@ -15,7 +15,7 @@ service::service(router &r)
   r.post("/stacktrace", &service::stacktrace);
   r.get("/result", &(service::result));
   // r.post("/login", &service::login);
-  r.post("/resigter", &service::resigter);
+  r.post("/registerUser", &service::registerUser);
 };
 
 void service::stacktrace(const http_request &message)
@@ -121,7 +121,7 @@ void service::result(const http_request &message)
   }
 }
 
-void service::resigter(const http_request &message)
+void service::registerUser(const http_request &message)
 {
   try
   {
@@ -130,7 +130,7 @@ void service::resigter(const http_request &message)
     auto builder = bsoncxx::builder::stream::document{};
     auto collection = service::conn["js-sorry"]["user"];
     std::vector<bsoncxx::document::value> user;
-    std::cout << "in resigter" << std::endl;
+    std::cout << "in registerUser" << std::endl;
     // should add collection one.
     auto data = message.extract_json().get();
     std::cout << data.to_string();

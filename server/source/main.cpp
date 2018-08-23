@@ -33,17 +33,17 @@ int main()
 }
 
 
-void resigter()
+void registerUser()
 {
-    web::http::client::http_client resigter_client(U("http://127.0.0.1/"));
+    web::http::client::http_client registerUser_client(U("http://127.0.0.1/"));
 
     web::json::value userData = web::json::value::object();
     userData["user"] = web::json::value::string("js-sorry-1");
     userData["password"] = web::json::value::string("js-sorry-password");
 
-    resigter_client.request(
+    registerUser_client.request(
                        methods::POST,
-                       uri_builder(U("/resigter")).set_port(5525).to_string(),
+                       uri_builder(U("/registerUser")).set_port(5525).to_string(),
                        userData)
         .then([=](http_response response) {
             printf("Response status code %u returned.\n", response.status_code());
