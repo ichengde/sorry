@@ -77,13 +77,46 @@ int registerUser()
     // }
     return 0;
 }
-// int main()
-// {
-//     registerUser();
-//     return 0;
-// }
+
 TEST_CASE("registerUser")
 {
     registerUser();
-    // registerUser();
+}
+
+int result()
+{
+
+    try
+    {
+        http_client registerUser_client("http://127.0.0.1:5525/");
+
+        http_request requestInfo(methods::GET);
+        requestInfo.headers().set_content_type("application/json");
+
+        registerUser_client.request(methods::GET, uri_builder(U("/result")).to_string())
+            .then([=](http_response response) {
+                CHECK(true);
+
+                for (auto h : response.headers())
+                {
+                    std::cout << h.first << h.second << std::endl;
+                }
+                printf("Response status %d\n", response.status_code());
+                printf("Response body %s returned.\n", response.extract_string().get().c_str());
+            })
+            .wait();
+    }
+    catch (const web::http::http_exception &e)
+    {
+        CHECK(false);
+
+        std::cout << e.what() << std::endl;
+        throw;
+    }
+    return 0;
+}
+
+TEST_CASE("result")
+{
+    result();
 }
