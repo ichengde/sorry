@@ -64,14 +64,6 @@ void service::stacktrace(const http_request &message)
   message.reply(status_codes::InternalError);
 }
 
-void service::test(const http_request &message)
-{
-  http_response b;
-  b.set_status_code(status_codes::OK);
-  b.set_body("my test");
-  message.reply(b);
-}
-
 void service::result(const http_request &message)
 {
   util u;
@@ -88,7 +80,6 @@ void service::result(const http_request &message)
     auto pipe = mongocxx::pipeline{};
     auto logs = collection.aggregate(pipe.limit(resultCount));
 
-    // auto logs = collection.find({});
     auto in_array = build << "stack" << bsoncxx::builder::stream::open_array;
     for (auto log : logs)
     {
@@ -130,8 +121,7 @@ void service::registerUser(const http_request &message)
     auto builder = bsoncxx::builder::stream::document{};
     auto collection = service::conn["js-sorry"]["user"];
     std::vector<bsoncxx::document::value> user;
-    std::cout << "in registerUser" << std::endl;
-    // should add collection one.
+
     auto data = message.extract_json().get();
     std::cout << data.to_string();
     if (data.is_object())
