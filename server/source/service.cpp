@@ -14,7 +14,7 @@ service::service(router &r)
   mongocxx::instance inst{};
   r.post("/stacktrace", &service::stacktrace);
   r.get("/result", &(service::result));
-  // r.post("/login", &service::login);
+  r.post("/login", &service::login);
   r.post("/registerUser", &service::registerUser);
 };
 
@@ -51,9 +51,7 @@ void service::stacktrace(const http_request &message)
       collection.insert_many(logs);
     }
 
-    auto response = http_response(status_codes::OK);
-    response.headers().add("Access-Control-Allow-Origin", "*");
-    response.headers().add("Access-Control-Allow-Headers", "*");
+    auto response = resp::get();
     message.reply(response);
   }
   catch (std::exception &e)
@@ -73,7 +71,6 @@ void service::result(const http_request &message)
 
   try
   {
-    http_response resp;
 
     auto build = bsoncxx::builder::stream::document{};
     auto collection = service::conn["js-sorry"]["log"];
@@ -88,10 +85,8 @@ void service::result(const http_request &message)
     auto after_array = in_array << bsoncxx::builder::stream::close_array;
     auto doc = after_array << bsoncxx::builder::stream::finalize;
 
+    auto resp = resp::get();
     resp.headers().add("Content-Type", "application/json");
-    resp.headers().add("Access-Control-Allow-Origin", "*");
-    resp.headers().add("Access-Control-Allow-Headers", "*");
-    resp.set_status_code(status_codes::OK);
     resp.set_body(bsoncxx::to_json(doc));
     message.reply(resp);
   }
@@ -136,16 +131,14 @@ void service::registerUser(const http_request &message)
     }
     else
     {
-      auto response = http_response(status_codes::InternalError);
-      response.headers().add("Access-Control-Allow-Origin", "*");
-      response.headers().add("Access-Control-Allow-Headers", "*");
+      auto response = resp::get(status_codes::InternalError);
+
       response.set_body("error");
       message.reply(response);
     }
 
-    auto response = http_response(status_codes::OK);
-    response.headers().add("Access-Control-Allow-Origin", "*");
-    response.headers().add("Access-Control-Allow-Headers", "*");
+    auto response = resp::get(status_codes::InternalError);
+
     response.set_body("successfully");
     message.reply(response);
   }
@@ -155,4 +148,12 @@ void service::registerUser(const http_request &message)
               << e.what();
   }
   message.reply(status_codes::InternalError);
+}
+
+void service::login(const http_request &message)
+{
+  util utilTool{};
+  auto data = message.extract_json().get();
+
+  message.reply(status_codes::OK);
 }

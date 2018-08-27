@@ -18,6 +18,20 @@
 
 using namespace web::http;
 
+class resp
+{
+public:
+  inline static http_response get(status_code m_status = status_codes::OK)
+  {
+    auto resp = http_response(m_status);
+
+    resp.headers().add("Content-Type", "application/json");
+    resp.headers().add("Access-Control-Allow-Origin", "*");
+    resp.headers().add("Access-Control-Allow-Headers", "*");
+    return resp;
+  }
+};
+
 class service
 {
 public:
@@ -25,7 +39,7 @@ public:
   static void stacktrace(const http_request &message);
   static void registerUser(const http_request &message);
   static void result(const http_request &message);
-  static void test(const http_request &message);
+  static void login(const http_request &message);
   static mongocxx::client conn;
 };
 #endif //SERVER_SERVICE_H
