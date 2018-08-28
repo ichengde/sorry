@@ -23,6 +23,7 @@ int main()
         std::string line;
         std::getline(std::cin, line);
 
+        std::cout << "sorry server close" << std::endl;
         listener.close().wait();
     }
     catch (std::exception &e)
@@ -30,22 +31,4 @@ int main()
         std::cout << "Error occurred sending response: %s\n"
                   << e.what();
     }
-}
-
-
-void registerUser()
-{
-    web::http::client::http_client registerUser_client(U("http://127.0.0.1/"));
-
-    web::json::value userData = web::json::value::object();
-    userData["user"] = web::json::value::string("js-sorry-1");
-    userData["password"] = web::json::value::string("js-sorry-password");
-
-    registerUser_client.request(
-                       methods::POST,
-                       uri_builder(U("/registerUser")).set_port(5525).to_string(),
-                       userData)
-        .then([=](http_response response) {
-            printf("Response status code %u returned.\n", response.status_code());
-        });
 }

@@ -83,3 +83,50 @@ TEST_CASE("result")
 {
     result();
 }
+
+int stacktrace(string_t stack)
+{
+    web::json::value data = web::json::value::parse(stack);
+
+    try
+    {
+        http_client registerUser_client("http://127.0.0.1:5525/");
+
+        registerUser_client.request(methods::POST, uri_builder(U("/stacktrace")).to_string(), data)
+            .then([=](http_response response) {
+                if (response.status_code() == status_codes::OK)
+                {
+                    CHECK(true);
+                }
+                else
+                {
+                    CHECK(false);
+                }
+
+                // printf("Response status %d\n", response.status_code());
+                // printf("Response body %s returned.\n", response.extract_string().get().c_str());
+            })
+            .wait();
+    }
+    catch (const web::http::http_exception &e)
+    {
+        CHECK(false);
+
+        std::cout << e.what() << std::endl;
+        throw;
+    }
+    return 0;
+}
+
+TEST_CASE("stacktrace")
+{
+
+    SUBCASE("stacktrace without project")
+    {
+        stacktrace("{\"stack\":[{\"columnNumber\":17,\"lineNumber\":3,\"fileName\":\"http://127.0.0.1:8080/test.js\",\"functionName\":\"stack3\",\"source\":\"    at stack3 (http://127.0.0.1:8080/test.js:3:17)\"},{\"columnNumber\":5,\"lineNumber\":9,\"fileName\":\"http://127.0.0.1:8080/test.js\",\"functionName\":\"stack2\",\"source\":\"    at stack2 (http://127.0.0.1:8080/test.js:9:5)\"},{\"columnNumber\":5,\"lineNumber\":15,\"fileName\":\"http://127.0.0.1:8080/test.js\",\"functionName\":\"stack1\",\"source\":\"    at stack1 (http://127.0.0.1:8080/test.js:15:5)\"},{\"columnNumber\":5,\"lineNumber\":35,\"fileName\":\"http://127.0.0.1:8080/test.js\",\"functionName\":\"window.onload\",\"source\":\"    at window.onload (http://127.0.0.1:8080/test.js:35:5)\"}]}");
+    }
+    SUBCASE("stacktrace with project")
+    {
+        stacktrace("{\"stack\":[{\"columnNumber\":17,\"lineNumber\":3,\"fileName\":\"http://127.0.0.1:8080/test.js\",\"functionName\":\"stack3\",\"source\":\"    at stack3 (http://127.0.0.1:8080/test.js:3:17)\"}],\"project\":\"test_my\"}");
+    }
+}

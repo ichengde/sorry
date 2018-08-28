@@ -23,12 +23,12 @@ class resp
 public:
   inline static http_response get(status_code m_status = status_codes::OK)
   {
-    auto resp = http_response(m_status);
+    auto m_resp = http_response(m_status);
 
-    resp.headers().add("Content-Type", "application/json");
-    resp.headers().add("Access-Control-Allow-Origin", "*");
-    resp.headers().add("Access-Control-Allow-Headers", "*");
-    return resp;
+    m_resp.headers().add("Content-Type", "application/json");
+    m_resp.headers().add("Access-Control-Allow-Origin", "*");
+    m_resp.headers().add("Access-Control-Allow-Headers", "*");
+    return m_resp;
   }
 };
 

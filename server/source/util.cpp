@@ -44,6 +44,4 @@ std::map<std::string, std::string> util::readConfigFile()
     configFile.close();
 
     return configParmasMap;
-    // file.open()
-    // std::basic_ifstream::open(configPath)
 }

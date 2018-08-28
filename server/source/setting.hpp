@@ -43,15 +43,10 @@ private:
         this->*(vpair.second) = ans->second;
       }
     }
-
-    std::cout << this->host << std::endl;
-    std::cout << this->user << std::endl;
-    std::cout << this->password << std::endl;
-
-  };                                     // ctor hidden
-  database(database const &);            // copy ctor hidden
-  database &operator=(database const &); // assign op. hidden
-  ~database(){};                         // dtor hidden
+  };
+  database(database const &);
+  database &operator=(database const &);
+  ~database(){};
 };
 
 } // namespace setting

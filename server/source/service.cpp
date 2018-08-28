@@ -33,16 +33,17 @@ void service::stacktrace(const http_request &message)
     if (data.is_object())
     {
       auto stack = data.at("stack");
-      auto project = data.at("project");
+      auto isHasProject = data.has_string_field("project");
+
       for (auto b : stack.as_array())
       {
         for (auto dd : b.as_object())
         {
-          std::cout << dd.first << dd.second << std::endl;
           builder << dd.first << dd.second.to_string();
         }
-        if (project.is_string())
+        if (isHasProject == true)
         {
+          auto project = data.at("project");
           builder << "project" << project.to_string();
         }
         bsoncxx::document::value log = builder << bsoncxx::builder::stream::finalize;
@@ -56,8 +57,7 @@ void service::stacktrace(const http_request &message)
   }
   catch (std::exception &e)
   {
-    std::cout << "Error occurred connect database: %s\n"
-              << e.what();
+    std::cout << "Error occurred" << e.what() << std::endl;
   }
   message.reply(status_codes::InternalError);
 }
@@ -92,7 +92,7 @@ void service::result(const http_request &message)
   }
   catch (std::exception &e)
   {
-    std::cout << "Error occurred connect database: %s\n"
+    std::cout << "Error occurred"
               << e.what()
               << std::endl
               << strstr(e.what(), "connection timeout")
@@ -144,8 +144,9 @@ void service::registerUser(const http_request &message)
   }
   catch (std::exception &e)
   {
-    std::cout << "Error occurred connect database: %s\n"
-              << e.what();
+    std::cout << "Error occurred"
+              << e.what()
+              << std::endl;
   }
   message.reply(status_codes::InternalError);
 }
