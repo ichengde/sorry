@@ -40,6 +40,7 @@ public:
   static void registerUser(const http_request &message);
   static void result(const http_request &message);
   static void login(const http_request &message);
+  static void consolelog(const http_request &message);
   static mongocxx::client conn;
 };
 #endif //SERVER_SERVICE_H

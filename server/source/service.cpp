@@ -13,6 +13,7 @@ service::service(router &r)
 {
   mongocxx::instance inst{};
   r.post("/stacktrace", &service::stacktrace);
+  r.post("/consolelog", &service::consolelog);
   r.get("/result", &(service::result));
   r.post("/login", &service::login);
   r.post("/registerUser", &service::registerUser);
@@ -26,6 +27,51 @@ void service::stacktrace(const http_request &message)
 
     auto builder = bsoncxx::builder::stream::document{};
     auto collection = service::conn["js-sorry"]["log"];
+    std::vector<bsoncxx::document::value> logs;
+
+    // should add collection one.
+    auto data = message.extract_json().get();
+    if (data.is_object())
+    {
+      auto stack = data.at("stack");
+      auto isHasProject = data.has_string_field("project");
+
+      for (auto b : stack.as_array())
+      {
+        for (auto dd : b.as_object())
+        {
+          builder << dd.first << dd.second.to_string();
+        }
+        if (isHasProject == true)
+        {
+          auto project = data.at("project");
+          builder << "project" << project.to_string();
+        }
+        bsoncxx::document::value log = builder << bsoncxx::builder::stream::finalize;
+        logs.push_back(log);
+      }
+      collection.insert_many(logs);
+    }
+
+    auto response = resp::get();
+    message.reply(response);
+  }
+  catch (std::exception &e)
+  {
+    std::cout << "Error occurred" << e.what() << std::endl;
+  }
+  message.reply(status_codes::InternalError);
+}
+
+
+void service::stacktrace(const http_request &message)
+{
+  try
+  {
+    util utilTool{};
+
+    auto builder = bsoncxx::builder::stream::document{};
+    auto collection = service::conn["js-sorry"]["consolelog"];
     std::vector<bsoncxx::document::value> logs;
 
     // should add collection one.
@@ -137,16 +183,27 @@ void service::registerUser(const http_request &message)
       message.reply(response);
     }
 
-    auto response = resp::get(status_codes::InternalError);
+    auto response = resp::get(status_codes::OK);
 
     response.set_body("successfully");
     message.reply(response);
   }
   catch (std::exception &e)
   {
-    std::cout << "Error occurred"
-              << e.what()
-              << std::endl;
+
+    if (strstr(e.what(), "E11000"))
+    {
+      auto response = resp::get(status_codes::InternalError);
+
+      response.set_body("user exist");
+      message.reply(response);
+    }
+    else
+    {
+      std::cout << "Error occurred"
+                << e.what()
+                << std::endl;
+    }
   }
   message.reply(status_codes::InternalError);
 }

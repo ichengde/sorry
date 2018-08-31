@@ -24,7 +24,8 @@ int registerUser()
 
         registerUser_client.request(methods::POST, uri_builder(U("/registerUser")).to_string(), userData)
             .then([=](http_response response) {
-                if (response.extract_string().get() == "successfully")
+                if (response.extract_string().get() == "successfully" ||
+                    response.extract_string().get() == "user exist")
                 {
                     CHECK(true);
                 }
