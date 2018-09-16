@@ -9,6 +9,7 @@
 #include <functional>
 #include "router.hpp"
 #include "util.hpp"
+#include "setting.hpp"
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
@@ -41,6 +42,5 @@ public:
   static void result(const http_request &message);
   static void login(const http_request &message);
   static void consolelog(const http_request &message);
-  static mongocxx::client conn;
 };
 #endif //SERVER_SERVICE_H

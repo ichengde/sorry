@@ -2,12 +2,6 @@
 // Created by liuchengde on 2018/7/15.
 //
 #include "service.hpp"
-#include "setting.hpp"
-#include "util.hpp"
-setting::database &mySetting = setting::database::Instance();
-mongocxx::client service::conn = mongocxx::client{mongocxx::uri{
-    "mongodb://" + mySetting.user + ":" + mySetting.password +
-    "@" + mySetting.host + "/js-sorry"}};
 
 service::service(router &r)
 {
@@ -25,34 +19,8 @@ void service::stacktrace(const http_request &message)
   {
     util utilTool{};
 
-    auto builder = bsoncxx::builder::stream::document{};
-    auto collection = service::conn["js-sorry"]["log"];
-    std::vector<bsoncxx::document::value> logs;
-
-    // should add collection one.
     auto data = message.extract_json().get();
-    if (data.is_object())
-    {
-      auto stack = data.at("stack");
-      auto isHasProject = data.has_string_field("project");
-
-      for (auto b : stack.as_array())
-      {
-        for (auto dd : b.as_object())
-        {
-          builder << dd.first << dd.second.to_string();
-        }
-        if (isHasProject == true)
-        {
-          auto project = data.at("project");
-          builder << "project" << project.to_string();
-        }
-        bsoncxx::document::value log = builder << bsoncxx::builder::stream::finalize;
-        logs.push_back(log);
-      }
-      collection.insert_many(logs);
-    }
-
+    // record stack trace;
     auto response = resp::get();
     message.reply(response);
   }
@@ -69,34 +37,8 @@ void service::stacktrace(const http_request &message)
   try
   {
     util utilTool{};
-
-    auto builder = bsoncxx::builder::stream::document{};
-    auto collection = service::conn["js-sorry"]["consolelog"];
-    std::vector<bsoncxx::document::value> logs;
-
-    // should add collection one.
     auto data = message.extract_json().get();
-    if (data.is_object())
-    {
-      auto stack = data.at("stack");
-      auto isHasProject = data.has_string_field("project");
-
-      for (auto b : stack.as_array())
-      {
-        for (auto dd : b.as_object())
-        {
-          builder << dd.first << dd.second.to_string();
-        }
-        if (isHasProject == true)
-        {
-          auto project = data.at("project");
-          builder << "project" << project.to_string();
-        }
-        bsoncxx::document::value log = builder << bsoncxx::builder::stream::finalize;
-        logs.push_back(log);
-      }
-      collection.insert_many(logs);
-    }
+    // write log to consolelog collection name
 
     auto response = resp::get();
     message.reply(response);
