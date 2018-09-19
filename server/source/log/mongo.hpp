@@ -1,10 +1,10 @@
-
-
 #ifndef MONGO_H
 #define MONGO_H
 
 #include <string>
 #include <iostream>
+
+#include <cpprest/json.h>
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
@@ -16,18 +16,58 @@
 
 namespace log
 {
-//   static mongocxx::client conn;
 
-database &mySetting = log::database::Instance();
+class Env
+{
+  public:
+    static Env &Instance()
+    {
+        static Env theEnv;
+        return theEnv;
+    }
 
-mongocxx::client conn = mongocxx::client{mongocxx::uri{
+    std::string host = "";
+    std::string user = "";
+    std::string password = "";
+    /* more (non-static) functions here */
+
+  private:
+    Env()
+    {
+        std::map<std::string, std::string> p = util::readConfigFile();
+        std::map<std::string, std::string> *dd = &p;
+        std::map<std::string, std::string Env::*> v = {
+            {"host", &Env::host},
+            {"username", &Env::user},
+            {"password", &Env::password},
+        };
+
+        for (auto vpair : v)
+        {
+            auto ans = p.find(vpair.first);
+            if (ans != p.end())
+            {
+                this->*(vpair.second) = ans->second;
+            }
+        }
+    };
+    Env(Env const &);
+    Env &operator=(Env const &);
+    ~Env(){};
+};
+
+} // namespace log
+
+static log::Env &mySetting = log::Env::Instance();
+
+static mongocxx::client conn = mongocxx::client{mongocxx::uri{
     "mongodb://" + mySetting.user + ":" + mySetting.password +
     "@" + mySetting.host + "/js-sorry"}};
 
 class mongo
 {
   public:
-    static void write(const web::value::json &data, std::string collectionName = "log")
+    static void write(const web::json::value &data, std::string collectionName = "log")
     {
 
         auto builder = bsoncxx::builder::stream::document{};
@@ -59,44 +99,4 @@ class mongo
     }
 };
 
-class database
-{
-  public:
-    static database &Instance()
-    {
-        static database theDatabase;
-        return theDatabase;
-    }
-
-    std::string host = "";
-    std::string user = "";
-    std::string password = "";
-    /* more (non-static) functions here */
-
-  private:
-    database()
-    {
-        std::map<std::string, std::string> p = util::readConfigFile();
-        std::map<std::string, std::string> *dd = &p;
-        std::map<std::string, std::string database::*> v = {
-            {"host", &database::host},
-            {"username", &database::user},
-            {"password", &database::password},
-        };
-
-        for (auto vpair : v)
-        {
-            auto ans = p.find(vpair.first);
-            if (ans != p.end())
-            {
-                this->*(vpair.second) = ans->second;
-            }
-        }
-    };
-    database(database const &);
-    database &operator=(database const &);
-    ~database(){};
-};
-
-} // namespace log
 #endif //MONGO_H

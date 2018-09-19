@@ -10,12 +10,7 @@
 #include "router.hpp"
 #include "util.hpp"
 #include "setting.hpp"
-
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/json.hpp>
-
-#include <mongocxx/client.hpp>
-#include <mongocxx/instance.hpp>
+#include "log/mongo.hpp"
 
 using namespace web::http;
 

@@ -1,9 +1,4 @@
 #include <iostream>
-#include <cpprest/http_listener.h>
-#include <cpprest/http_headers.h>
-#include <codecvt>
-#include <cpprest/http_client.h>
-#include <cpprest/json.h>
 #include "router.hpp"
 #include "service.hpp"
 
