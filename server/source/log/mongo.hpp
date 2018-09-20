@@ -13,9 +13,7 @@
 #include <mongocxx/instance.hpp>
 
 #include "../util.hpp"
-
-namespace log
-{
+#include "file.hpp"
 
 class Env
 {
@@ -56,9 +54,7 @@ class Env
     ~Env(){};
 };
 
-} // namespace log
-
-static log::Env &mySetting = log::Env::Instance();
+static Env &mySetting = Env::Instance();
 
 static mongocxx::client conn = mongocxx::client{mongocxx::uri{
     "mongodb://" + mySetting.user + ":" + mySetting.password +

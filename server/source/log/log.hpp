@@ -3,7 +3,7 @@
 
 namespace log
 {
-class log
+class trunk
 {
-}
+};
 } // namespace log

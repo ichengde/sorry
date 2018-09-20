@@ -11,6 +11,7 @@ service::service(router &r)
   r.get("/result", &(service::result));
   r.post("/login", &service::login);
   r.post("/registerUser", &service::registerUser);
+  r.post("/test", &service::test);
 };
 
 void service::stacktrace(const http_request &message)
@@ -156,4 +157,11 @@ void service::login(const http_request &message)
   auto data = message.extract_json().get();
 
   message.reply(status_codes::OK);
+}
+
+void service::test(const http_request &message)
+{
+  file::write();
+  message.reply(status_codes::OK);
+
 }

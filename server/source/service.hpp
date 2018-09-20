@@ -37,5 +37,6 @@ public:
   static void result(const http_request &message);
   static void login(const http_request &message);
   static void consolelog(const http_request &message);
+  static void test(const http_request &message);
 };
 #endif //SERVER_SERVICE_H
