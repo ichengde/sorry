@@ -6,12 +6,13 @@
 service::service(router &r)
 {
   mongocxx::instance inst{};
+  r.get("/result", &(service::result));
+  r.get("/test", &service::test);
+
   r.post("/stacktrace", &service::stacktrace);
   r.post("/consolelog", &service::consolelog);
-  r.get("/result", &(service::result));
   r.post("/login", &service::login);
   r.post("/registerUser", &service::registerUser);
-  r.post("/test", &service::test);
 };
 
 void service::stacktrace(const http_request &message)
@@ -55,28 +56,13 @@ void service::result(const http_request &message)
 {
   util u;
   auto params = u.getParams(message);
-  auto count = params.find("count");
-  int resultCount = count != params.end() ? std::stoi(count->second) : 10;
-
   try
   {
 
-    // auto build = bsoncxx::builder::stream::document{};
-    // auto collection = service::conn["js-sorry"]["log"];
-    // auto pipe = mongocxx::pipeline{};
-    // auto logs = collection.aggregate(pipe.limit(resultCount));
-
-    // auto in_array = build << "stack" << bsoncxx::builder::stream::open_array;
-    // for (auto log : logs)
-    // {
-    //   in_array << log;
-    // }
-    // auto after_array = in_array << bsoncxx::builder::stream::close_array;
-    // auto doc = after_array << bsoncxx::builder::stream::finalize;
-
     auto resp = resp::get();
     resp.headers().add("Content-Type", "application/json");
-    // resp.set_body(bsoncxx::to_json(doc));
+    auto doc = mongo::result(params);
+    resp.set_body(bsoncxx::to_json(doc));
     message.reply(resp);
   }
   catch (std::exception &e)
@@ -102,34 +88,23 @@ void service::registerUser(const http_request &message)
   {
     util utilTool{};
 
-    auto builder = bsoncxx::builder::stream::document{};
-    // auto collection = service::conn["js-sorry"]["user"];
-    // std::vector<bsoncxx::document::value> user;
+    auto data = message.extract_json().get();
+    bool isSuccess = user::registerNew(data);
 
-    // auto data = message.extract_json().get();
-    // std::cout << data.to_string();
-    // if (data.is_object())
-    // {
-    //   auto stack = data.at("user");
-    //   auto userData = data.as_object();
+    if (isSuccess == true)
+    {
+      auto response = resp::get(status_codes::OK);
 
-    //   builder << "user" << userData.at("user").to_string();
-    //   builder << "password" << userData.at("password").to_string();
-    //   bsoncxx::document::value emitUserData = builder << bsoncxx::builder::stream::finalize;
-    //   collection.insert_one(emitUserData.view());
-    // }
-    // else
-    // {
-    //   auto response = resp::get(status_codes::InternalError);
+      response.set_body("successfully");
+      message.reply(response);
+    }
+    else
+    {
+      auto response = resp::get(status_codes::InternalError);
 
-    //   response.set_body("error");
-    //   message.reply(response);
-    // }
-
-    auto response = resp::get(status_codes::OK);
-
-    response.set_body("successfully");
-    message.reply(response);
+      response.set_body("error");
+      message.reply(response);
+    }
   }
   catch (std::exception &e)
   {
@@ -163,5 +138,4 @@ void service::test(const http_request &message)
 {
   file::write();
   message.reply(status_codes::OK);
-
 }

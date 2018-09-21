@@ -10,7 +10,7 @@
 #include "router.hpp"
 #include "util.hpp"
 #include "setting.hpp"
-#include "log/mongo.hpp"
+#include "user/register.cpp"
 
 using namespace web::http;
 

@@ -93,6 +93,28 @@ class mongo
             collection.insert_many(logs);
         }
     }
+
+    static bsoncxx::v_noabi::document::value result(std::map<utility::string_t, utility::string_t> &params)
+    {
+
+        auto count = params.find("count");
+        int resultCount = count != params.end() ? std::stoi(count->second) : 10;
+
+        auto build = bsoncxx::builder::stream::document{};
+        auto collection = conn["js-sorry"]["log"];
+        auto pipe = mongocxx::pipeline{};
+        auto logs = collection.aggregate(pipe.limit(resultCount));
+
+        auto in_array = build << "stack" << bsoncxx::builder::stream::open_array;
+        for (auto log : logs)
+        {
+            in_array << log;
+        }
+        auto after_array = in_array << bsoncxx::builder::stream::close_array;
+        auto doc = after_array << bsoncxx::builder::stream::finalize;
+
+        return doc;
+    }
 };
 
 #endif //MONGO_H
