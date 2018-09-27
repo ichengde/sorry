@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.05)
 project(server)
 
 # Configure compiler options ...
@@ -28,10 +28,15 @@ if (UNIX) # Darwing or Linux
     set(OPENSSL_VERSION "1.0.1")
   endif ()
 
-
-  file(GLOB BOOST_ROOT_DIR /usr/local/Cellar/boost/*)
-  find_package(Boost 1.67 REQUIRED COMPONENTS thread system log program_options chrono)
-  find_package(Threads REQUIRED)
+  if (APPLE)
+    file(GLOB BOOST_ROOT_DIR /usr/local/Cellar/boost/*)
+    find_package(Boost 1.67 REQUIRED COMPONENTS thread system log program_options chrono)
+    find_package(Threads REQUIRED)
+  else ()
+    file(GLOB BOOST_ROOT_DIR /usr/include/boost/*)
+    find_package(Boost 1.58 REQUIRED COMPONENTS thread system log program_options chrono)
+    find_package(Threads REQUIRED)
+  endif ()
 endif ()
 
 if (WIN32) # Windows systems including Win64.
@@ -42,10 +47,10 @@ if (WIN32) # Windows systems including Win64.
   # message(FATAL_ERROR "-- Windows is not supported for now.")
 endif ()
 
-set(HEADER_SEARCH_PATHS ${CPPRESTSDK_INCLUDE_DIR} 
-                        ${BOOST_INCLUDE_DIR} 
-                        ${OPENSSL_INCLUDE_DIR}  
-                        ${BSONCXX_INCLUDE_DIR} 
+set(HEADER_SEARCH_PATHS ${CPPRESTSDK_INCLUDE_DIR}
+                        ${BOOST_INCLUDE_DIR}
+                        ${OPENSSL_INCLUDE_DIR}
+                        ${BSONCXX_INCLUDE_DIR}
                         ${MONGOCXX_INCLUDE_DIR}
                         ${DOCTEST_INCLUDE_DIR})
 
