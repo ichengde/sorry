@@ -2,6 +2,7 @@
 // Created by liuchengde on 2018/7/15.
 //
 #include "service.hpp"
+#include "user/register.hpp"
 
 service::service(router &r)
 {
