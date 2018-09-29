@@ -4,14 +4,23 @@ project(server)
 # Configure compiler options ...
 set(CMAKE_CXX_STANDARD 17)
 
-
-# headers search paths ...
-set(CPPRESTSDK_INCLUDE_DIR "/usr/local/include")
-set(BOOST_INCLUDE_DIR "/usr/local/Cellar/boost/1.67.0_1")
-set(MONGOCXX_INCLUDE_DIR "/usr/local/include/mongocxx/v_noabi")
-set(BSONCXX_INCLUDE_DIR "/usr/local/include/bsoncxx/v_noabi")
-set(OPENSSL_INCLUDE_DIR "/usr/local/Cellar/openssl/1.0.2p/include")
-set(DOCTEST_INCLUDE_DIR "./doctest/doctest")
+if (APPLE)
+	# headers search paths ...
+	set(CPPRESTSDK_INCLUDE_DIR "/usr/local/include")
+	set(BOOST_INCLUDE_DIR "/usr/local/Cellar/boost/1.67.0_1")
+	set(MONGOCXX_INCLUDE_DIR "/usr/local/include/mongocxx/v_noabi")
+	set(BSONCXX_INCLUDE_DIR "/usr/local/include/bsoncxx/v_noabi")
+	set(OPENSSL_INCLUDE_DIR "/usr/local/Cellar/openssl/1.0.2p/include")
+	set(DOCTEST_INCLUDE_DIR "./doctest/doctest")
+else ()
+	if (UNIX)
+	  set(CPPRESTSDK_INCLUDE_DIR "/usr/include")
+	  set(BOOST_INCLUDE_DIR "/usr/include/boost")
+	  set(MONGOCXX_INCLUDE_DIR "/usr/local/include/mongocxx/v_noabi")
+	  set(BSONCXX_INCLUDE_DIR "/usr/local/include/bsoncxx/v_noabi")
+	  set(OPENSSL_INCLUDE_DIR "/usr/include/openssl")
+	  set(DOCTEST_INCLUDE_DIR "./doctest/doctest")
+endif ()
 
 # Configure required libraries ...
 if (UNIX) # Darwing or Linux
