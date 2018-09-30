@@ -74,18 +74,18 @@ class mongo
         if (data.is_object())
         {
             auto stack = data.at("stack");
-            auto isHasProject = data.has_string_field("project");
+            auto isHasProject = data.has_field("project");
 
             for (auto b : stack.as_array())
             {
                 for (auto dd : b.as_object())
                 {
-                    builder << dd.first << dd.second.to_string();
+                    builder << dd.first << dd.second.serialize();
                 }
                 if (isHasProject == true)
                 {
                     auto project = data.at("project");
-                    builder << "project" << project.to_string();
+                    builder << "project" << project.serialize();
                 }
                 bsoncxx::document::value log = builder << bsoncxx::builder::stream::finalize;
                 logs.push_back(log);
