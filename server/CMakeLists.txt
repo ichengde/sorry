@@ -73,11 +73,11 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++17 -DBOOST_LOG_DYN_LINK")
 endif ()
 
-add_executable(server ./source/main.cpp
-  ./source/router.cpp
-  ./source/service.cpp
-  ./source/util.cpp
-  )
+
+aux_source_directory(./source SERVER_SOURCE)
+
+
+add_executable(server ${SERVER_SOURCE})
 
 add_executable(server_test ./test/source/test.cpp)
 
