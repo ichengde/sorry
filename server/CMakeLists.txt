@@ -12,15 +12,22 @@ if (APPLE)
 	set(BSONCXX_INCLUDE_DIR "/usr/local/include/bsoncxx/v_noabi")
 	set(OPENSSL_INCLUDE_DIR "/usr/local/Cellar/openssl/1.0.2p/include")
 	set(DOCTEST_INCLUDE_DIR "./doctest/doctest")
-else ()
-  if (UNIX)
-    set(CPPRESTSDK_INCLUDE_DIR "/usr/include")
-    set(BOOST_INCLUDE_DIR "/usr/include/boost")
-    set(MONGOCXX_INCLUDE_DIR "/usr/local/include/mongocxx/v_noabi")
-    set(BSONCXX_INCLUDE_DIR "/usr/local/include/bsoncxx/v_noabi")
-    set(OPENSSL_INCLUDE_DIR "/usr/include/openssl")
+endif ()
+if (UNIX)
+	set(CPPRESTSDK_INCLUDE_DIR "/usr/include")
+	set(BOOST_INCLUDE_DIR "/usr/include/boost")
+	set(MONGOCXX_INCLUDE_DIR "/usr/local/include/mongocxx/v_noabi")
+	set(BSONCXX_INCLUDE_DIR "/usr/local/include/bsoncxx/v_noabi")
+	set(OPENSSL_INCLUDE_DIR "/usr/include/openssl")
 	set(DOCTEST_INCLUDE_DIR "./doctest/doctest")
-  endif ()
+endif ()
+if (WIN32)
+	set(CPPRESTSDK_INCLUDE_DIR "/usr/include")
+	set(BOOST_INCLUDE_DIR "/usr/include/boost")
+	set(MONGOCXX_INCLUDE_DIR "/usr/local/include/mongocxx/v_noabi")
+	set(BSONCXX_INCLUDE_DIR "/usr/local/include/bsoncxx/v_noabi")
+	set(OPENSSL_INCLUDE_DIR "/usr/include/openssl")
+	set(DOCTEST_INCLUDE_DIR "./doctest/doctest")
 endif ()
 
 # Configure required libraries ...
@@ -57,12 +64,14 @@ if (WIN32) # Windows systems including Win64.
   # message(FATAL_ERROR "-- Windows is not supported for now.")
 endif ()
 
+set(CURRENT_DIR "./")
 set(HEADER_SEARCH_PATHS ${CPPRESTSDK_INCLUDE_DIR}
                         ${BOOST_INCLUDE_DIR}
                         ${OPENSSL_INCLUDE_DIR}
                         ${BSONCXX_INCLUDE_DIR}
                         ${MONGOCXX_INCLUDE_DIR}
-                        ${DOCTEST_INCLUDE_DIR})
+                        ${DOCTEST_INCLUDE_DIR}
+                        ${CURRENT_DIR})
 
 # Configure compiler options ...
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -74,8 +83,8 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 endif ()
 
 
-aux_source_directory(./source SERVER_SOURCE)
 
+aux_source_directory(./lib SERVER_SOURCE)
 
 add_executable(server ${SERVER_SOURCE})
 

@@ -2,6 +2,7 @@ server/cmake-build-debug/
 node_modules
 .idea/
 .DS_Store
+.vs/
 boost*/
 cpprestsdk*/
 vcpkg*/
