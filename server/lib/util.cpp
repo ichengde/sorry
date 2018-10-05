@@ -2,46 +2,46 @@
 // Created by liuchengde on 2018/7/16.
 //
 
-#include "sorry/util.hpp"
+#include "util.hpp"
 
 std::map<utility::string_t, utility::string_t> util::getParams(const web::http::http_request &message)
 {
-    auto query = web::uri::decode(message.relative_uri().query());
-    auto params = web::uri::split_query(query);
-    return params;
+	auto query = web::uri::decode(message.relative_uri().query());
+	auto params = web::uri::split_query(query);
+	return params;
 }
 
 utility::string_t util::getPath(const web::http::http_request &message)
 {
-    auto relativePath = web::uri::decode(message.relative_uri().path());
-    return relativePath;
+	auto relativePath = web::uri::decode(message.relative_uri().path());
+	return relativePath;
 }
 
 std::map<std::string, std::string> util::readConfigFile()
 {
-    const char *homedir = getenv("HOME");
-    std::string configPath{homedir};
-    configPath += "/js-sorry.cnf";
+	const char *homedir = getenv("HOME");
+	std::string configPath{ homedir };
+	configPath += "/js-sorry.cnf";
 
-    std::map<std::string, std::string> configParmasMap{};
-    std::ifstream configFile(configPath);
-    std::stringstream configStream;
-    configStream << configFile.rdbuf();
+	std::map<std::string, std::string> configParmasMap{};
+	std::ifstream configFile(configPath);
+	std::stringstream configStream;
+	configStream << configFile.rdbuf();
 
-    std::string configKey;
-    std::string configValue;
+	std::string configKey;
+	std::string configValue;
 
-    while (configStream >> configKey >> configValue, !configStream.eof())
-    {
-        configParmasMap[configKey] = configValue;
-    }
+	while (configStream >> configKey >> configValue, !configStream.eof())
+	{
+		configParmasMap[configKey] = configValue;
+	}
 
-    if (configFile.fail())
-    {
-        std::cerr << "Error: " << strerror(errno) << std::endl;
-    }
+	if (configFile.fail())
+	{
+		std::cerr << "Error: " << strerror(errno) << std::endl;
+	}
 
-    configFile.close();
+	configFile.close();
 
-    return configParmasMap;
+	return configParmasMap;
 }

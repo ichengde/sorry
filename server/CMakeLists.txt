@@ -64,7 +64,7 @@ if (WIN32) # Windows systems including Win64.
   # message(FATAL_ERROR "-- Windows is not supported for now.")
 endif ()
 
-set(CURRENT_DIR "./")
+set(CURRENT_DIR "./sorry/")
 set(HEADER_SEARCH_PATHS ${CPPRESTSDK_INCLUDE_DIR}
                         ${BOOST_INCLUDE_DIR}
                         ${OPENSSL_INCLUDE_DIR}
@@ -88,7 +88,7 @@ aux_source_directory(./lib SERVER_SOURCE)
 
 add_executable(server ${SERVER_SOURCE})
 
-add_executable(server_test ./test/source/test.cpp)
+#add_executable(server_test ./test/source/test.cpp)
 
 # library search paths ...
 if (APPLE)
@@ -127,7 +127,6 @@ if (APPLE)
 else ()
   if (UNIX)
     target_link_libraries(${PROJECT_NAME} ${LIBRARIES_SEARCH_PATHS})
-    target_link_libraries(server_test ${LIBRARIES_SEARCH_PATHS})
   endif ()
 endif ()
 

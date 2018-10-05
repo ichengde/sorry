@@ -12,22 +12,22 @@ using namespace web::http;
 using namespace web::http::experimental::listener;
 class router {
 public:
-    router(http_listener &listener);
+	router(http_listener &listener);
 
-    std::map<std::string, std::function<void(http_request)>> getHandleSet;
-    std::map<std::string, std::function<void(http_request)>> postHandleSet;
-    
-    static web::uri getEndPoint();
+	std::map<std::string, std::function<void(http_request)>> getHandleSet;
+	std::map<std::string, std::function<void(http_request)>> postHandleSet;
 
-    void get(const std::string &path, const std::function<void(http_request)> &handler);
-    void post(const std::string &path, const std::function<void(http_request)> &handler);
+	static web::uri getEndPoint();
 
-    std::function<void(http_request)> getHandler;
-    std::function<void(http_request)> postHandler;
-    std::function<void(http_request)> optionHandler;
+	void get(const std::string &path, const std::function<void(http_request)> &handler);
+	void post(const std::string &path, const std::function<void(http_request)> &handler);
+
+	std::function<void(http_request)> getHandler;
+	std::function<void(http_request)> postHandler;
+	std::function<void(http_request)> optionHandler;
 
 private:
-    http_listener *listener;
+	http_listener *listener;
 };
 
 #endif //SERVER_ROUTER_H

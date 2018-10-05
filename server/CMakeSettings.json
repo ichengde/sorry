@@ -1,19 +1,19 @@
-{
+﻿{
   "configurations": [
     {
-      "name": "Linux-Debug",
+      "name": "js-sorry",
       "generator": "Unix Makefiles",
       "remoteMachineName": "${defaultRemoteMachineName}",
       "configurationType": "Debug",
-      "remoteCMakeListsRoot": "/home/chegde/temp/${workspaceHash}/${name}",
+      "remoteCMakeListsRoot": "/home/chegde/workspace/${name}/server",
       "cmakeExecutable": "/usr/local/bin/cmake",
       "buildRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\build\\${name}",
       "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-      "remoteBuildRoot": "/home/chegde/temp/build/${workspaceHash}/build/${name}",
-      "remoteInstallRoot": "/home/chegde/temp/build/${workspaceHash}/install/${name}",
+      "remoteBuildRoot": "/home/chegde/workspace/${name}/server/build",
+      "remoteInstallRoot": "/home/chegde/workspace/${name}/server",
       "remoteCopySources": true,
-      "remoteCopySourcesOutputVerbosity": "Normal",
-      "remoteCopySourcesConcurrentCopies": "10",
+      "remoteCopySourcesOutputVerbosity": "Verbose",
+      "remoteCopySourcesConcurrentCopies": "20",
       "remoteCopySourcesMethod": "sftp",
       "remoteCopySourcesExclusionList": [
         ".vs",
