@@ -64,7 +64,7 @@ if (WIN32) # Windows systems including Win64.
   # message(FATAL_ERROR "-- Windows is not supported for now.")
 endif ()
 
-set(CURRENT_DIR "./")
+set(CURRENT_DIR "./sorry/")
 set(HEADER_SEARCH_PATHS ${CPPRESTSDK_INCLUDE_DIR}
                         ${BOOST_INCLUDE_DIR}
                         ${OPENSSL_INCLUDE_DIR}

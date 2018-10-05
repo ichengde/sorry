@@ -1,12 +1,16 @@
 #include <iostream>
-#include "sorry/router.hpp"
-#include "sorry/service.hpp"
+#include <cpprest/http_listener.h>
+#include <cpprest/http_headers.h>
+#include <codecvt>
+#include <cpprest/http_client.h>
+#include <cpprest/json.h>
+#include "router.hpp"
+#include "service.hpp"
+
 using namespace web::http;
 
 int main()
 {
-
-	std::cout << "sorry progress start" << std::endl;
 	experimental::listener::http_listener listener{ router::getEndPoint() };
 
 	router r{ listener };
