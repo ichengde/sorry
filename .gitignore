@@ -3,6 +3,7 @@ node_modules
 .idea/
 .DS_Store
 .vs/
+build/
 boost*/
 cpprestsdk*/
 vcpkg*/

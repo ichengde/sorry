@@ -1,17 +1,65 @@
 //
 // Created by liuchengde on 2018/7/15.
 //
-#ifndef SERVER_SERVICE_H
-#define SERVER_SERVICE_H
+#ifndef SORRY_SERVER_SERVICE_H
+#define SORRY_SERVER_SERVICE_H
+
+#include <string>
+#include <iostream>
 
 #include <cpprest/http_listener.h>
 #include <cpprest/http_headers.h>
+#include <cpprest/json.h>
 #include <functional>
-#include "router.hpp"
-#include "util.hpp"
-#include "setting.hpp"
+#include "sorry/router.hpp"
+#include "sorry/util.hpp"
+#include "sorry/setting.hpp"
+
+
+#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/json.hpp>
+
+#include <mongocxx/client.hpp>
+#include <mongocxx/instance.hpp>
+
 
 using namespace web::http;
+
+class Env
+{
+public:
+	static Env &Instance()
+	{
+		static Env theEnv;
+		return theEnv;
+	};
+	std::string host = "";
+	std::string user = "";
+	std::string password = "";
+private:
+	Env()
+	{
+		std::map<std::string, std::string> p = util::readConfigFile();
+		std::map<std::string, std::string> *dd = &p;
+		std::map<std::string, std::string Env::*> v = {
+			{"host", &Env::host},
+			{"username", &Env::user},
+			{"password", &Env::password},
+		};
+
+		for (auto vpair : v)
+		{
+			auto ans = p.find(vpair.first);
+			if (ans != p.end())
+			{
+				this->*(vpair.second) = ans->second;
+			}
+		}
+	};
+	Env(Env const &);
+	Env &operator=(Env const &);
+	~Env() {};
+};
 
 class resp
 {
@@ -38,4 +86,4 @@ public:
   static void consolelog(const http_request &message);
   static void test(const http_request &message);
 };
-#endif //SERVER_SERVICE_H
+#endif //SORRY_SERVER_SERVICE_H

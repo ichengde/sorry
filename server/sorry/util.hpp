@@ -2,8 +2,8 @@
 // Created by liuchengde on 2018/7/16.
 //
 
-#ifndef SERVER_UTIL_H
-#define SERVER_UTIL_H
+#ifndef SORRY_SERVER_UTIL_H
+#define SORRY_SERVER_UTIL_H
 
 #include <iostream>
 #include <string>
@@ -52,4 +52,4 @@ public:
   }
 };
 
-#endif //SERVER_UTIL_H
+#endif //SORRY_SERVER_UTIL_H

@@ -88,7 +88,7 @@ aux_source_directory(./lib SERVER_SOURCE)
 
 add_executable(server ${SERVER_SOURCE})
 
-add_executable(server_test ./test/source/test.cpp)
+#add_executable(server_test ./test/source/test.cpp)
 
 # library search paths ...
 if (APPLE)
@@ -127,7 +127,6 @@ if (APPLE)
 else ()
   if (UNIX)
     target_link_libraries(${PROJECT_NAME} ${LIBRARIES_SEARCH_PATHS})
-    target_link_libraries(server_test ${LIBRARIES_SEARCH_PATHS})
   endif ()
 endif ()
 
