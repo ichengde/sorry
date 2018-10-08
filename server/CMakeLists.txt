@@ -101,7 +101,7 @@ if (APPLE)
 else ()
   if (UNIX)
     set(OPENSSL_LIBS "${OPENSSL_LIBRARIES}")
-    set(CPPRESTSDK_LIBRARY "/usr/local/lib/libcpprest.a")
+    set(CPPRESTSDK_LIBRARY "/usr/local/lib/libcpprest.so")
     set(BSONCXX_LIBRARY "/usr/local/lib/libbsoncxx.so")
     set(MONGOCXX_LIBRARY "/usr/local/lib/libmongocxx.so")
 
