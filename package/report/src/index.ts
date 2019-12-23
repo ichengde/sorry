@@ -1,4 +1,5 @@
-import { sorryType } from "./sorry.d";
+import { sorryType } from "./sorry";
+
 import { getCookie, getParameter, isOBJByType, loadScript, processStackMsg } from "./util";
 const methodList = ["log", "info", "warn", "debug", "error"];
 
@@ -52,8 +53,8 @@ const sorry: sorryType = {
     },
     vconsole: (show) => {
         loadScript(sorry.settings.vconsoleUrl, () => {
-            if (typeof vConsole === "undefined") {
-                vConsole = new VConsole({
+            if (typeof (window as any).vConsole === "undefined") {
+                (window as any).vConsole = new (window as any).VConsole({
                     defaultPlugins: ["system", "network", "element", "storage"],
                     maxLogNumber: 5000,
                 });
@@ -66,16 +67,16 @@ const sorry: sorryType = {
         for (; i < len; i++) {
             const item = sorry.store[i];
             item.noOrigin = true;
-            vConsole.pluginList.default.printLog(item);
+            (window as any).vConsole.pluginList.default.printLog(item);
         }
 
         if (show) {
             try {
-                vConsole.show();
-            } catch (e) {}
+                (window as any).vConsole.show();
+            } catch (e) { }
 
             window.addEventListener("load", () => {
-                vConsole.show();
+                (window as any).vConsole.show();
             });
         }
     },
@@ -84,10 +85,10 @@ const sorry: sorryType = {
     loadScript,
 };
 
-methodList.forEach((item) => {
+methodList.forEach(function (item) {
     const method = console[item];
 
-    console[item] = () => {
+    console[item] = function () {
         sorry.store.push({
             logType: item,
             logs: arguments,
@@ -105,9 +106,9 @@ window.onerror = (msg, url, line, col, error) => {
     }
 
     if (isOBJByType(newMsg, "Event")) {
-        newMsg += newMsg.type ?
-            ("--" + newMsg.type + "--" + (newMsg.target ?
-                (newMsg.target.tagName + "::" + newMsg.target.src) : "")) : "";
+        newMsg += (newMsg as Event).type ?
+            ("--" + (newMsg as Event).type + "--" + ((newMsg as Event).target ?
+                (((newMsg as Event).target as any).tagName + "::" + ((newMsg as Event).target as any).src) : "")) : "";
     }
 
     newMsg = (newMsg + "" || "").substr(0, 500);

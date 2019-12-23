@@ -27,6 +27,10 @@ interface sorryType {
     loadScript: (src: string, cb: () => {}) => void;
 }
 
-
+declare global {
+    interface Window {
+        vConsole: any;
+    }
+}
 
 export { sorryType };

@@ -24,7 +24,7 @@ export function getParameter(n) {
     return result || getParameterByName(n);
 }
 
-export function getParameterByName(name, url) {
+export function getParameterByName(name, url?) {
     if (!url) { url = window.location.href; }
     name = name.replace(/[\[\]]/g, "\\$&");
     const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
