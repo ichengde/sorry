@@ -1,13 +1,14 @@
 import { sorryType } from "./sorry";
 
 import { getCookie, getParameter, isOBJByType, loadScript, processStackMsg } from "./util";
-const methodList = ["log", "info", "warn", "debug", "error"];
+const methodList = ["log", "info", "warn", "debug",]; // "error"
 
-const sorry: sorryType = {
+export const sorry: sorryType = {
     settings: {
         vconsoleUrl: "",
         reportUrl: null,
-        reportPrefix: "",
+        project: "",
+        id: "",
         reportKey: "msg",
         otherReport: null,
         entry: null,
@@ -83,7 +84,20 @@ const sorry: sorryType = {
     getCookie,
     getParameter,
     loadScript,
+
 };
+
+const getReportContent = () => {
+    return {
+        userAgent: navigator.userAgent,
+        location: location.href,
+
+        project: sorry.settings.project,
+        id: sorry.settings.id,
+        store: sorry.store,
+        logs: sorry.logs
+    }
+}
 
 methodList.forEach(function (item) {
     const method = console[item];
@@ -98,45 +112,45 @@ methodList.forEach(function (item) {
     };
 });
 
-window.onerror = (msg, url, line, col, error) => {
-    let newMsg = msg;
+
+window.addEventListener("error", (ev: ErrorEvent) => {
+    const { message, filename, lineno, colno, error } = ev;
+    let newMsg = message;
 
     if (error && error.stack) {
         newMsg = processStackMsg(error);
     }
 
-    if (isOBJByType(newMsg, "Event")) {
-        newMsg += (newMsg as Event).type ?
-            ("--" + (newMsg as Event).type + "--" + ((newMsg as Event).target ?
-                (((newMsg as Event).target as any).tagName + "::" + ((newMsg as Event).target as any).src) : "")) : "";
-    }
-
-    newMsg = (newMsg + "" || "").substr(0, 500);
-
     sorry.logs.push({
         msg: newMsg,
-        target: url,
-        rowNum: line,
-        colNum: col,
+        target: filename,
+        rowNum: lineno,
+        colNum: colno,
     });
 
-    if ((msg as string).toLowerCase().indexOf("script error") > -1) {
+    if (message.toLowerCase().indexOf("script error") > -1) {
         console.error("Script Error: See Brower Console For Detail");
     } else {
-        console.error(newMsg);
+        console.error(message);
     }
+
 
     const ss = sorry.settings;
-    if (ss.reportUrl) {
-        let src = ss.reportUrl + (ss.reportUrl.indexOf("?") > -1 ? "&" : "?") + ss.reportKey + "=" + (ss.reportPrefix ? ("[" + ss.reportPrefix + "]") : "") + newMsg + "&t=" + new Date().getTime();
-        if (ss.otherReport) {
-            for (const i in ss.otherReport) {
-                if (ss.otherReport.hasOwnProperty(i)) {
-                    src += "&" + i + "=" + (ss.otherReport[i] as string);
-                }
-            }
-        }
 
-        new Image().src = src;
+
+
+    if (ss.reportUrl) {
+        let src = ss.reportUrl
+
+        fetch(ss.reportUrl, {
+            method: 'POST',
+            body: JSON.stringify(getReportContent()),
+        })
+            .then(res => {
+                return res.json();
+            })
+            .catch(err => {
+            });
+
     }
-};
+})

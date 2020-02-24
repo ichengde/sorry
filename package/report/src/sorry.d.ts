@@ -5,10 +5,10 @@ interface logInfoType {
 }
 
 interface settings {
-
-    vconsoleUrl: string;
+    vconsoleUrl?: string;
     reportUrl?: string;
-    reportPrefix: string;
+    project: string;
+    id?: string;
     reportKey: string;
     otherReport: object;
     entry: string;
@@ -22,6 +22,7 @@ interface sorryType {
     entry: (selector: string) => void;
     vconsole: (show: boolean) => void;
 
+    // setClient: () => void;
     getCookie: (name: string) => void;
     getParameter: (n: string) => void;
     loadScript: (src: string, cb: () => {}) => void;

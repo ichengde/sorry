@@ -7,7 +7,7 @@ export function loadScript(src, callback) {
     s = document.createElement("script");
     s.type = "text/javascript";
     s.src = src;
-    s.onload = s.onreadystatechange = function() {
+    s.onload = s.onreadystatechange = function () {
         //console.log( this.readyState ); //uncomment this line to see which ready states are called.
         if (!r && (!this.readyState || this.readyState === "complete")) {
             r = true;
@@ -40,11 +40,10 @@ export function isOBJByType(o, type) {
 
 export function processStackMsg(error) {
     let stack = error.stack
-        .replace(/\n/gi, "")
-        .split(/\bat\b/)
+        .split(/\n/)
+        .map(i => i.replace(/\s{4}/g, ''))
         .slice(0, 9)
-        .join("@")
-        .replace(/\?[^:]+/gi, "");
+
     const msg = error.toString();
     if (stack.indexOf(msg) < 0) {
         stack = msg + "@" + stack;
@@ -53,7 +52,7 @@ export function processStackMsg(error) {
 }
 
 export function getCookie(name) {
-    let arr; 
+    let arr;
     const reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
     arr = document.cookie.match(reg);
     if (arr) {
