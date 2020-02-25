@@ -95,7 +95,7 @@ const getReportContent = () => {
         project: sorry.settings.project,
         id: sorry.settings.id,
         store: sorry.store,
-        logs: sorry.logs
+        error: sorry.logs
     }
 }
 
@@ -103,9 +103,14 @@ methodList.forEach(function (item) {
     const method = console[item];
 
     console[item] = function () {
+        const argumentsArray = [];
+        for (let i = 0; i < arguments.length; i++) {
+            argumentsArray.push(arguments[i]);
+        }
+
         sorry.store.push({
             logType: item,
-            logs: arguments,
+            logs: argumentsArray,
         });
 
         method.apply(console, arguments);
@@ -113,7 +118,7 @@ methodList.forEach(function (item) {
 });
 
 
-window.addEventListener("error", (ev: ErrorEvent) => {
+export const errorHandler = (ev: ErrorEvent, info?: any) => {
     const { message, filename, lineno, colno, error } = ev;
     let newMsg = message;
 
@@ -121,12 +126,16 @@ window.addEventListener("error", (ev: ErrorEvent) => {
         newMsg = processStackMsg(error);
     }
 
-    sorry.logs.push({
+    if (info) {
+        newMsg = processStackMsg(ev);
+    }
+
+    sorry.logs = {
         msg: newMsg,
         target: filename,
         rowNum: lineno,
         colNum: colno,
-    });
+    };
 
     if (message.toLowerCase().indexOf("script error") > -1) {
         console.error("Script Error: See Brower Console For Detail");
@@ -136,14 +145,14 @@ window.addEventListener("error", (ev: ErrorEvent) => {
 
 
     const ss = sorry.settings;
+    const reportUrl = ss.reportUrl
 
-
-
-    if (ss.reportUrl) {
-        let src = ss.reportUrl
-
-        fetch(ss.reportUrl, {
+    if (reportUrl) {
+        fetch(reportUrl, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
             body: JSON.stringify(getReportContent()),
         })
             .then(res => {
@@ -153,4 +162,6 @@ window.addEventListener("error", (ev: ErrorEvent) => {
             });
 
     }
-})
+}
+
+window.addEventListener("error", errorHandler)
