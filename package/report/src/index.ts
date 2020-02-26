@@ -8,7 +8,7 @@ export const sorry: sorryType = {
         vconsoleUrl: "",
         reportUrl: null,
         project: "",
-        id: "",
+        token: "",
         reportKey: "msg",
         otherReport: null,
         entry: null,
@@ -93,7 +93,7 @@ const getReportContent = () => {
         location: location.href,
 
         project: sorry.settings.project,
-        id: sorry.settings.id,
+        token: sorry.settings.token,
         store: sorry.store,
         error: sorry.logs
     }

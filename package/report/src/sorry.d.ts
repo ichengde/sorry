@@ -8,7 +8,7 @@ interface settings {
     vconsoleUrl?: string;
     reportUrl?: string;
     project: string;
-    id?: string;
+    token?: string;
     reportKey: string;
     otherReport: object;
     entry: string;
