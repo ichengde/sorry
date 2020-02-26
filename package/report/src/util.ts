@@ -45,9 +45,10 @@ export function processStackMsg(error) {
         .slice(0, 9)
 
     const msg = error.toString();
-    if (stack.indexOf(msg) < 0) {
-        stack = msg + "@" + stack;
+    if (stack.every(a => a.indexOf(msg) < 0)) {
+        stack.unshift(msg);
     }
+    
     return stack;
 }
 
