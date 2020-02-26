@@ -1,15 +1,26 @@
 {
   "name": "chegde-sorry",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "catch javascript error",
   "main": "dist/main.js",
   "scripts": {
     "watch": "webpack --watch",
     "build": "webpack",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "npm run build"
   },
   "author": "chegde",
+  "keywords": [
+    "chegde",
+    "sorry"
+  ],
   "license": "ISC",
+  "homepage": "https://github.com/ichengde/sorry/tree/master/package/report",
+  "bugs": "https://github.com/ichengde/sorry/issues",
+  "repository": "https://github.com/ichengde/sorry/tree/master/package/report",
+  "files": [
+    "dist/main.js"
+  ],
   "devDependencies": {
     "ts-loader": "^6.2.1",
     "typescript": "^3.8.2",
