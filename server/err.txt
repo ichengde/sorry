@@ -1,2 +1,0 @@
-server(16493,0x700009d91000) malloc: *** error for object 0x7fa1244021c0: pointer being freed was not allocated
-*** set a breakpoint in malloc_error_break to debug
