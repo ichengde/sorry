@@ -1,4 +1,4 @@
-package chegde.sorry.server
+package Chegde.sorry.server
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

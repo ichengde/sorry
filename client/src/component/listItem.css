@@ -1,0 +1,8 @@
+.error-list {
+  display: flex;
+  flex-direction: row;
+}
+
+.error-list > div {
+  margin-left: 10px;
+}
