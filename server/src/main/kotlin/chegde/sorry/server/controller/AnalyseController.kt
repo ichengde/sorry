@@ -3,14 +3,18 @@ package chegde.sorry.server.controller;
 import chegde.sorry.server.config.MongoConfig
 import chegde.sorry.server.javascriptMsg.JavascriptMsg
 import chegde.sorry.server.javascriptMsg.Response
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.query.BasicQuery
-import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.util.StringUtils
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
 
 
 @RestController
@@ -39,6 +43,23 @@ class AnalyseController(val connect: MongoConfig) {
         val item = connect.mongoTemplate("log").findOne(query, JavascriptMsg::class.java);
 
         return Response(0, data = item)
+    }
+
+    @Value("\${sorry_upload_dir:\${user.home}}")
+    var uploadDir: String? = null
+    @PostMapping("/upload/{project}/{version}")
+    fun upload(@RequestParam("file") file: MultipartFile): Response {
+
+        try {
+            val copyLocation: Path = Paths
+                    .get(uploadDir + File.separator + StringUtils.cleanPath(file.name))
+            Files.copy(file.inputStream, copyLocation, StandardCopyOption.REPLACE_EXISTING)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+
+        return Response(0)
     }
 
 }

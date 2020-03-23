@@ -2,3 +2,16 @@
   text-align: left;
   word-wrap: break-word;
 }
+
+.error-stack > div {
+  margin-top: 10px;
+}
+
+.store-log-stack {
+  display: flex;
+  flex-direction: row;
+}
+
+.store-log-stack > div {
+  margin-right: 10px;
+}

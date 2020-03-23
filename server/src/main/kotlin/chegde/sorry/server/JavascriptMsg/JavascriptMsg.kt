@@ -12,6 +12,8 @@ data class JavascriptMsg(
         val token: String? = null,
         val project: String? = null,
 
+        val version: String?,
+
         val userAgent: String?,
         val location: String?,
         val store: ArrayList<Store>?,

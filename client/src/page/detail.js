@@ -45,5 +45,14 @@ export function DetailPage() {
         <div>
             {Array.isArray(content.error.msg) ? content.error.msg.map((i, idx) => <div key={idx}>{i.replace('@', ` (at `)}</div>) : <div>{content.error.msg}</div>}
         </div>
+
+
+        <div>
+            {content.store.map((i, idx) => <div key={idx} className="store-log-stack">
+                <div>{i.logType}</div>
+                <div>{JSON.stringify(i.logs)}</div>
+            </div>)}
+            {/* <div></div> */}
+        </div>
     </div> : <div></div>;
 }
