@@ -1,3 +1,6 @@
+deploy.sh
+*script/*
+server/target/*
 server/cmake-build-debug/
 node_modules
 .idea/

@@ -3,6 +3,7 @@ package chegde.sorry.server.controller;
 import chegde.sorry.server.config.MongoConfig
 import chegde.sorry.server.javascriptMsg.JavascriptMsg
 import chegde.sorry.server.javascriptMsg.Response
+import chegde.sorry.server.util.DirUtil
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.query.BasicQuery
@@ -47,19 +48,48 @@ class AnalyseController(val connect: MongoConfig) {
 
     @Value("\${sorry_upload_dir:\${user.home}}")
     var uploadDir: String? = null
-    @PostMapping("/upload/{project}/{version}")
-    fun upload(@RequestParam("file") file: MultipartFile): Response {
 
+    @PostMapping("/upload/{project}/{version}")
+    fun upload(
+            @RequestParam("file") file: MultipartFile,
+            @PathVariable("project") project: String,
+            @PathVariable("version") version: String
+    ): Response {
+
+        val pathDir1 = uploadDir + File.separator +
+                project + File.separator
+        val pathDir2 = pathDir1 +
+                version + File.separator
         try {
+            DirUtil.makeDir(pathDir1)
+            DirUtil.makeDir(pathDir2)
+
             val copyLocation: Path = Paths
-                    .get(uploadDir + File.separator + StringUtils.cleanPath(file.name))
+                    .get(pathDir2 + file.originalFilename?.let { StringUtils.cleanPath(it) })
             Files.copy(file.inputStream, copyLocation, StandardCopyOption.REPLACE_EXISTING)
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
-
         return Response(0)
+    }
+
+    @GetMapping("/read/{project}/{version}/{filename}")
+    fun read(
+            @PathVariable("project") project: String,
+            @PathVariable("version") version: String,
+            @PathVariable("filename") filename: String
+    ): String {
+
+        try {
+            val filePath = Paths.get(uploadDir + File.separator +
+                    project + File.separator + version + File.separator + filename + ".map")
+
+            return String(Files.readAllBytes(filePath))
+
+        } catch (e: Exception) {
+            return "no such file";
+        }
     }
 
 }

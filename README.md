@@ -1,2 +1,6 @@
-#env
-sorry_report_url
+# env
+mongo_username
+
+mongo_password
+
+sorry_upload_dir
