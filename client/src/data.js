@@ -1,6 +1,4 @@
-
-// export const page = new Subject();
-const requestBase = window.location.protocol + (window.location.host.includes('localhost') ? `//localhost:18889` : process.env.sorry_report_url);
+const requestBase = process.env.REACT_APP_SORRY_REPORT_HOST;
 
 export function getList(page) {
     return fetch(`${requestBase}/analyse/list/${page}`)

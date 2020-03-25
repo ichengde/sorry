@@ -40,7 +40,7 @@ export function DetailPage() {
         <div>
             {Array.isArray(content.error.msg) ? content.error.msg.map((i, idx) => <div key={idx} onClick={() => {
                 setSourceContent(null);
-                const lineMatch = i.match(/(?<=js\:).*?(?=\:)/);
+                const lineMatch = i.match(/\d\:\d/);
                 if (!lineMatch) {
                     setSourceContent(null);
 
@@ -48,10 +48,16 @@ export function DetailPage() {
                     return;
                 }
 
-                const line = i.match(/(?<=js\:).*?(?=\:)/).pop();
+                const line = i.slice(i.indexOf(".map") + 5, i.lastIndexOf(':'));
                 const col = i.slice(i.lastIndexOf(':') + 1);
 
-                getRead(content.project, content.version, i.match(/(?<=\/js\/).*?(?=\:)/)).then((rawSourceMap) => {
+                console.log(i)
+
+                getRead(
+                    content.project,
+                    content.version,
+                    i.slice(i.indexOf('.map(' + 5), i.lastIndexOf(':'))
+                ).then((rawSourceMap) => {
                     if (rawSourceMap === 'no such file') {
                         setSourceContent(rawSourceMap);
 
@@ -87,7 +93,10 @@ export function DetailPage() {
                     });
 
 
-                })
+                }, (err) => {
+                    setSourceContent('error', err);
+                });
+
             }}>{i.replace('@', ` (at `)}</div>) : <div>{content.error.msg}</div>}
         </div>
 
