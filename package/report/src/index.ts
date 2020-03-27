@@ -14,7 +14,7 @@ export const sorry: sorryType = {
     },
     store: [],
     logs: [],
-    entry: (selector) => {
+    /* entry: (selector) => {
         let count = 0
         const entry = document.querySelector(selector)
 
@@ -26,8 +26,8 @@ export const sorry: sorryType = {
                     sorry.vconsole(true)
                 }
             })
-        }
-    },
+        } 
+    },*/
     config: (config) => {
         for (const i in config) {
             if (Object.prototype.hasOwnProperty.call(config, i)) {
@@ -35,6 +35,7 @@ export const sorry: sorryType = {
             }
         }
 
+        /*
         if (config.entry) {
             window.addEventListener('load', () => {
                 sorry.entry(config.entry)
@@ -42,15 +43,16 @@ export const sorry: sorryType = {
         }
         const parameter = getParameter('console')
 
-        if (parameter) {
+         if (parameter) {
             if (parameter === 'show') {
                 sorry.vconsole(true)
             } else {
                 sorry.vconsole(false)
             }
         }
+        */
     },
-    vconsole: (show) => {
+ /*    vconsole: (show) => {
         loadScript(sorry.settings.vconsoleUrl, () => {
             if (typeof (window as any).vConsole === 'undefined') {
                 (window as any).vConsole = new (window as any).VConsole({
@@ -76,10 +78,10 @@ export const sorry: sorryType = {
                 (window as any).vConsole.show()
             })
         }
-    },
+    }, */
     getCookie,
     getParameter,
-    loadScript
+    // loadScript
 
 }
 
@@ -88,8 +90,10 @@ const getReportContent = () => {
         userAgent: navigator.userAgent,
         location: location.href,
 
+        version: sorry.settings.version,
         project: sorry.settings.project,
         token: sorry.settings.token,
+        
         store: sorry.store,
         error: sorry.logs
     }

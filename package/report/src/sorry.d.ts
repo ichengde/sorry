@@ -20,13 +20,13 @@ interface sorryType {
     store: logInfoType[];
     logs: any;
     config: (config: any) => void;
-    entry: (selector: string) => void;
-    vconsole: (show: boolean) => void;
+    //entry: (selector: string) => void;
+    //loadScript: (src: string, cb: () => {}) => void;
+    //vconsole: (show: boolean) => void;
 
     // setClient: () => void;
     getCookie: (name: string) => void;
     getParameter: (n: string) => void;
-    loadScript: (src: string, cb: () => {}) => void;
 }
 
 interface Window {
