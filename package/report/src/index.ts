@@ -1,4 +1,4 @@
-import { getCookie, getParameter, loadScript, processStackMsg } from './util'
+import { getCookie, getParameter, processStackMsg } from './util'
 const methodList = ['log', 'info', 'warn', 'debug'] // "error"
 
 export const sorry: sorryType = {
@@ -52,7 +52,7 @@ export const sorry: sorryType = {
         }
         */
     },
- /*    vconsole: (show) => {
+    /*    vconsole: (show) => {
         loadScript(sorry.settings.vconsoleUrl, () => {
             if (typeof (window as any).vConsole === 'undefined') {
                 (window as any).vConsole = new (window as any).VConsole({
