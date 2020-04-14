@@ -1,19 +1,19 @@
-class Dep {                  // 订阅池
+class Dep {
     id = null;
     subs = [];
     static watch: any;
 
     constructor() {
-        this.id = new Date() //这里简单的运用时间戳做订阅池的ID
+        this.id = new Date()
     }
-    defined() {              // 添加订阅者
+    defined() {
         Dep.watch.add(this);
     }
-    notify() {              //通知订阅者有变化
-        this.subs.forEach((e, i) => {
+    notify() {
+        this.subs.forEach((e) => {
             if (typeof e.update === 'function') {
                 try {
-                    e.update.apply(e)  //触发订阅者更新函数
+                    e.update.apply(e)
                 } catch (err) {
                     console.warn(err)
                 }
@@ -30,15 +30,15 @@ class Watch {
     callBack = null;
 
     constructor(name, fn) {
-        this.name = name;       //订阅消息的名称
-        this.id = new Date();   //这里简单的运用时间戳做订阅者的ID
-        this.callBack = fn;     //订阅消息发送改变时->订阅者执行的回调函数     
+        this.name = name;
+        this.id = new Date();
+        this.callBack = fn;
     }
-    add(dep) {                  //将订阅者放入dep订阅池
+    add(dep) {
         dep.subs.push(this);
     }
-    update() {                  //将订阅者更新方法
-        var cb = this.callBack; //赋值为了不改变函数内调用的this
+    update() {
+        var cb = this.callBack;
         cb(this.name);
     }
 }
