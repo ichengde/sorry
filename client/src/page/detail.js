@@ -38,9 +38,9 @@ export function DetailPage() {
         </div>
 
         <div>
-            {Array.isArray(content.error.msg) ? content.error.msg.map((i, idx) => <div key={idx} onClick={() => {
+            {Array.isArray(content.error.msg) ? content.error.msg.map((errorLineMessage, idx) => <div key={idx} onClick={() => {
                 setSourceContent(null);
-                const lineMatch = i.match(/\d+\:\d+/);
+                const lineMatch = errorLineMessage.match(/\d+\:\d+/);
                 if (!lineMatch) {
                     setSourceContent(null);
 
@@ -48,14 +48,14 @@ export function DetailPage() {
                     return;
                 }
 
-                const lineColAr = i.split(':');
-                const line = lineColAr[0];
-                const col = lineColAr[1];
+                const lineColAr = lineMatch[0].split(':');
+                const queryLineCount = lineColAr[0];
+                const queryColCount = lineColAr[1];
 
-                const start = i.lastIndexOf('/') + 1;
-                const end = i.indexOf('.js') + 3;
+                const start = errorLineMessage.lastIndexOf('/') + 1;
+                const end = errorLineMessage.indexOf('.js') + 3;
 
-                const fileName = i.slice(start, end);
+                const fileName = errorLineMessage.slice(start, end);
 
                 getRead(
                     content.project,
@@ -74,8 +74,8 @@ export function DetailPage() {
 
                     new SourceMapConsumer(rawSourceMap).then((consumer) => {
                         const position = consumer.originalPositionFor({
-                            line: parseInt(line),
-                            column: parseInt(col)
+                            line: parseInt(queryLineCount),
+                            column: parseInt(queryColCount)
                         })
 
                         console.log(position)
@@ -101,7 +101,7 @@ export function DetailPage() {
                     setSourceContent('error', err);
                 });
 
-            }}>{i.replace('@', ` (at `)}</div>) : <div>{content.error.msg}</div>}
+            }}>{errorLineMessage.replace('@', ` (at `)}</div>) : <div>{content.error.msg}</div>}
         </div>
 
         {sourceContent ? <pre>
