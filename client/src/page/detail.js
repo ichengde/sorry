@@ -40,7 +40,7 @@ export function DetailPage() {
         <div>
             {Array.isArray(content.error.msg) ? content.error.msg.map((i, idx) => <div key={idx} onClick={() => {
                 setSourceContent(null);
-                const lineMatch = i.match(/\d\:\d/);
+                const lineMatch = i.match(/\d+\:\d+/);
                 if (!lineMatch) {
                     setSourceContent(null);
 
@@ -48,15 +48,19 @@ export function DetailPage() {
                     return;
                 }
 
-                const line = i.slice(i.indexOf(".map") + 5, i.lastIndexOf(':'));
-                const col = i.slice(i.lastIndexOf(':') + 1);
+                const lineColAr = i.split(':');
+                const line = lineColAr[0];
+                const col = lineColAr[1];
 
-                console.log(i)
+                const start = i.lastIndexOf('/') + 1;
+                const end = i.indexOf('.js') + 3;
+
+                const fileName = i.slice(start, end);
 
                 getRead(
                     content.project,
                     content.version,
-                    i.slice(i.indexOf('.map(' + 5), i.lastIndexOf(':'))
+                    fileName
                 ).then((rawSourceMap) => {
                     if (rawSourceMap === 'no such file') {
                         setSourceContent(rawSourceMap);
