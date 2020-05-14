@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
-
-import {
-    Redirect,
-} from "react-router-dom";
+import React, { useState } from 'react';
+import { Redirect } from "react-router-dom";
 import './listItem.css';
+
 
 export const ListItem = ({ i }) => {
     let [detailId, setDetailId] = useState(null);

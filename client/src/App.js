@@ -1,17 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import './App.css';
+import { DetailPage } from './page/detail';
+import { ListPage } from './page/list';
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-  Redirect
-} from "react-router-dom";
 
-import { ListPage } from './page/list'
-import { DetailPage } from './page/detail'
 
 class App extends React.Component {
 

@@ -1,1 +1,6 @@
 # sorry client
+
+REACT_APP_SORRY_REPORT_API_HOST
+请求api
+REACT_APP_SORRY_REPORT_FILE_HOST
+sourcemap存放api

@@ -1,14 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
-import {
-    BrowserRouter,
-    Switch,
-    Route,
-    useParams
-} from "react-router-dom";
-import './detail.css';
-import { getDetail, getRead } from "../data";
+import React, { useEffect, useState } from 'react';
+import { useParams } from "react-router-dom";
 import { SourceMapConsumer } from 'source-map';
+import { getDetail, getRead } from "../data";
+import './detail.css';
 
 export function DetailPage() {
     let { id } = useParams();
