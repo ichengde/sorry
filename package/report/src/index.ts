@@ -118,4 +118,3 @@ export const errorHandler = (ev: ErrorEvent, info?: any) => {
     }
 }
 
-window.addEventListener('error', errorHandler)

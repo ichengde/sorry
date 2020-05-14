@@ -29,6 +29,8 @@ export function ListPage() {
     }
 
     return <div>
+        {toNext !== null ? <Redirect replace to={`/list/${toNext}`}></Redirect> : undefined}
+
         {list.map(p => {
             return <ListItem i={p} key={p.createTime}></ListItem>
         })}
@@ -49,8 +51,6 @@ export function ListPage() {
                     }}>prev</div>
                 </div>
         }
-
-        {toNext !== null ? <Redirect replace to={`/list/${toNext}`}></Redirect> : undefined}
 
     </div >;
 }
