@@ -17,6 +17,5 @@ export function getRead(project, version, filename) {
             .then(e => e.text())
     }
 
-    return fetch(`${requestBase}/analyse/read/${project}/${version}/${filename}`)
-        .then(e => e.text())
+    return fetch(`https://sorry-file.ihook.center:888/${project}/${version}/${filename}.map`).then(e => e.text())
 }
