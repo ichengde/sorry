@@ -1,11 +1,8 @@
 
-import React, { useState, useEffect } from 'react';
-import {
-    Redirect,
-    useParams
-} from "react-router-dom";
-import { getList } from "../data";
+import React, { useEffect, useState } from 'react';
+import { Redirect, useParams } from "react-router-dom";
 import { ListItem } from '../component/listItem';
+import { getList } from "../data";
 
 
 export function ListPage() {
@@ -16,34 +13,21 @@ export function ListPage() {
     let [toNext, setToNext] = useState(null);
 
     useEffect(() => {
-        if (list.length === 0) {
-            getList(page).then(r => {
-                setList(r.data)
-            })
-        }
-    })
-
-    const setPage = (page) => {
-        setList([])
-        setToNext(page)
-    }
+        getList(page).then(r => {
+            setList(r.data)
+        })
+    }, [page])
 
     return <div>
         {
-            page === 0 ?
-                <div>
-                    <div onClick={() => {
-                        setPage(page + 1)
-                    }}>next</div>
-                </div> :
-                <div>
-                    <div onClick={() => {
-                        setPage(page + 1)
-                    }}>next</div>
-                    <div onClick={() => {
-                        setPage(page - 1)
-                    }}>prev</div>
-                </div>
+            <div>
+                <div onClick={() => {
+                    setToNext(page + 1);
+                }}>next</div>
+                {page > 0 ? <div onClick={() => {
+                    setToNext(page - 1);
+                }}>prev</div> : undefined}
+            </div>
         }
 
         {toNext !== null ? <Redirect replace to={`/list/${toNext}`}></Redirect> : undefined}
